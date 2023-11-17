@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace API.Dtos
 {
-    public class Boss : BaseEntityVarchar
+    public class OfficeEmployeeDto
     {
-        public string IdBoss { get; set; }
+        public string IdOfficeEmployee { get; set; }
+        public string IdOffice { get; set; }
         public string IdEmployee { get; set; }
-        public Employee Employees { get; set; }
     }
 }

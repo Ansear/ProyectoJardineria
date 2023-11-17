@@ -10,10 +10,10 @@ namespace Domain.Entities
         public string CustomerName { get; set; }
         public string CustomerLastName { get; set; }
         public int CustomerPhoneId { get; set; }
-        // public Phone Phones { get; set; }
+        public Phone Phones { get; set; }
         public string CustomerFax { get; set; }
         public int AddressId { get; set; }
-        // public Address Addresses { get; set; }
+        public Address Addresses { get; set; }
         public decimal CreditLimit { get; set; }
         public int TypePersonId { get; set; }
         public TypePerson TypePersons { get; set; }
