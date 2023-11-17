@@ -7,6 +7,7 @@ namespace Domain.Entities
 {
     public class ProductSupplier
     {
+        public string IdProductSupplier { get; set; }
         public int IdSupplier { get; set; }
         public Supplier Supplier { get; set; }
         public string IdProduct { get; set; }

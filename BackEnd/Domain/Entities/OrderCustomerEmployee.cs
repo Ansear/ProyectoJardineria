@@ -12,5 +12,6 @@ namespace Domain.Entities
         public int IdCustomer { get; set; }
         public Customer Customer { get; set; }
         public string IdEmployee { get; set; }
+        public Employee Employee { get; set; }
     }
 }

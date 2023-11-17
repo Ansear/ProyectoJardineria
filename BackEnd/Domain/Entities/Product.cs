@@ -15,7 +15,7 @@ namespace Domain.Entities
         public int SupplierPrice { get; set; }
         public string IdGamma { get; set; }
         public ProductGamma Gamma { get; set; }
-        public List<ProductSupplier> ProductSuppliers { get; set; }
-        public List<OrderDetail> OrderDetails { get; set; }
+        public ICollection<ProductSupplier> ProductSuppliers { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

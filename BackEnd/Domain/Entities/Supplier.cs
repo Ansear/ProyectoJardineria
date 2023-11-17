@@ -15,6 +15,6 @@ namespace Domain.Entities
         // public Address Addresses { get; set; }
         public int TypePersonId { get; set; }
         public TypePerson TypePersons { get; set; }
-        public List<ProductSupplier> ProductSuppliers { get; set; }
+        public ICollection<ProductSupplier> ProductSuppliers { get; set; }
     }
 }

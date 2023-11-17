@@ -12,8 +12,8 @@ namespace Domain.Entities
         public DateTime DeliveryDate { get; set; }
         public string OrderStatus { get; set; }
         public string OrderComments { get; set; }
-        public Payment Payment { get; set; }
-        public List<OrderDetail> OrderDetails { get; set; }
-        public List<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
+        public Payment Payments { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
     }
 }

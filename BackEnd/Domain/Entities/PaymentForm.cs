@@ -8,7 +8,6 @@ namespace Domain.Entities
     public class PaymentForm : BaseEntityVarchar
     {
         public string PaymentFormName { get; set; }
-        public int IdPayment { get; set; }
-        public Payment Payment { get; set; }
+        public ICollection<Payment> Payments { get; set; }
     }
 }

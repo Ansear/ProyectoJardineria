@@ -10,6 +10,6 @@ namespace Domain.Entities
         public string TextDescription { get; set; }
         public string HtmlDescription { get; set; }
         public string Image { get; set; }
-        public List<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }
