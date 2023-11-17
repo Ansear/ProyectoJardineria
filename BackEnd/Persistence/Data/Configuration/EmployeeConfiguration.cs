@@ -15,7 +15,6 @@ namespace Persistence.Data.Configuration
             builder.ToTable("Employee");
 
             builder.HasKey(e => e.Id);
-
             builder.Property(e => e.Id);
 
             builder.Property(e => e.EmployeeName)
@@ -35,7 +34,7 @@ namespace Persistence.Data.Configuration
 
             builder.HasMany(p => p.Bosses)
                 .WithOne(p => p.Employees)
-                .HasForeignKey(p => p.IdBoss);
+                .HasForeignKey(p => p.Id);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace Persistence.Data.Configuration
         {
             builder.ToTable("Boss");
 
-            builder.HasKey(e => new { e.IdBoss, e.IdEmployee });
+            builder.HasKey(e => new { e.Id, e.IdEmployee });
 
             builder.HasOne(p => p.Employees)
                 .WithMany(p => p.Bosses)
-                .HasForeignKey(p => p.IdBoss);
+                .HasForeignKey(p => p.Id);
 
             builder.HasOne(p => p.Employees)
                 .WithMany(p => p.Bosses)

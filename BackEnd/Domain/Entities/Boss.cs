@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Boss
+    public class Boss : BaseEntityVarchar
     {
         public string IdEmployee { get; set; }
-        public string IdBoss { get; set; }
         public Employee Employees { get; set; }
     }
 }
