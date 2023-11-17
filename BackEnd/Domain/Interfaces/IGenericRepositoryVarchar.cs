@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Domain.Entities;
 
 namespace Domain.Interfaces;
-public interface IGenericRepository<T> where T : BaseEntityVarchar
+public interface IGenericRepositoryVarchar<T> where T : BaseEntityVarchar
 {
-    Task<T> GetByIdAsync(int Id);
+    Task<T> GetByIdAsync(string Id);
     Task<IEnumerable<T>> GetAllAsync();
     IEnumerable<T> Find(Expression<Func<T, bool>> expression);
     void Add(T Entity);
