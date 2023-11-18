@@ -19,6 +19,14 @@ namespace Domain.Interfaces
         IState States { get; }
         IOffice Offices { get; }
         IPhone Phones { get; }
+        IOrder Orders { get; }
+        IOrderDetail OrderDetails { get; }
+        IPayment Payments { get; }
+        IPaymentForm PaymentForms { get; }
+        IProduct Products { get; }
+        IProductGamma ProductGammas { get; }
+        IRol Rols { get; }
+        IUser Users { get; }
         Task<int> SaveAsync();
     }
 }
