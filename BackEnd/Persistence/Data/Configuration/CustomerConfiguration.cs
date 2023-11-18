@@ -38,6 +38,8 @@ namespace Persistence.Data.Configuration
 
             builder.HasOne(tp => tp.TypePerson).WithMany(c => c.Customers).HasForeignKey(sc => sc.TypePersonId)
                     .IsRequired();
+        builder.HasOne(u => u.User).WithOne(c => c.Customer).HasForeignKey<Customer>(c => c.IdUser)
+                    .IsRequired();
         }
     }
 }

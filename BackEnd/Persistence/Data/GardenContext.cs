@@ -33,6 +33,7 @@ public class GardenContext : DbContext
     public DbSet<Payment> Payments { get; set; }
     public DbSet<PaymentForm> PaymentForms { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserRol> UsersRols { get; set; }
     public DbSet<Rol> Rols { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -35,6 +35,9 @@ namespace Persistence.Data.Configuration
             builder.HasMany(p => p.Bosses)
                 .WithOne(p => p.Employees)
                 .HasForeignKey(p => p.Id);
+        
+        builder.HasOne(u => u.User).WithOne(c => c.Employee).HasForeignKey<Employee>(c => c.IdUser)
+                    .IsRequired();
         }
     }
 }

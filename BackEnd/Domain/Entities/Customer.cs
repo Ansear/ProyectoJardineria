@@ -17,6 +17,8 @@ namespace Domain.Entities
         public decimal CreditLimit { get; set; }
         public int TypePersonId { get; set; }
         public TypePerson TypePerson { get; set; }
+        public int IdUser { get; set; }
+        public User User { get; set; }
         public ICollection<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
     }
 }

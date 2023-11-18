@@ -17,5 +17,6 @@ public class MappingProfiles : Profile
         CreateMap<State, StateDto>().ReverseMap();
         CreateMap<Office, OfficeDto>().ReverseMap();
         CreateMap<Phone, PhoneDto>().ReverseMap();
+        CreateMap<Phone, PhoneDto>().ReverseMap();
     }
 }

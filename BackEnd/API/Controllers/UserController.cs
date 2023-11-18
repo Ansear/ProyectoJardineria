@@ -11,16 +11,14 @@ namespace API.Controllers;
 
 public class UserController : BaseController
 {
-    // Sebas este el codigo que toca descomentar una vez implemente IUserServices
-    /* 
     private readonly IUserService _userService;
 
     public UserController(IUserService userService)
     {
         _userService = userService;
     }
-        [HttpPost("register")]
-    public async Task<ActionResult> RegisterAsync(RegisterDto model)
+    [HttpPost("register")]
+    public async Task<ActionResult> Register(RegisterDto model)
     {
         var result = await _userService.RegisterAsync(model);
         return Ok(result);
@@ -61,6 +59,4 @@ public class UserController : BaseController
         };
         Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     } 
-    */
-    
 }
