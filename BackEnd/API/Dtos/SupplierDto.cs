@@ -7,7 +7,7 @@ namespace API.Dtos
 {
     public class SupplierDto
     {
-        public string IdSupplier { get; set; }
+        public int IdSupplier { get; set; }
         public string SupplierName { get; set; }
         
     }

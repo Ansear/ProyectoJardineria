@@ -12,13 +12,13 @@ using Persistence.Data;
 
 namespace API.Controllers
 {
-    public class Controller : BaseController
+    public class BossController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly GardenContext _context;
 
-        public Controller(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
+        public BossController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
