@@ -1,5 +1,5 @@
 import jsVectorMap from 'jsvectormap'
-import '../us-aea-en'
+import '../co_en'
 
 const map01 = () => {
   const mapSelector = document.querySelectorAll('#mapOne')
@@ -7,7 +7,7 @@ const map01 = () => {
   if (mapSelector.length) {
     const mapOne = new jsVectorMap({
       selector: '#mapOne',
-      map: 'us_aea_en',
+      map: 'co_en',
       zoomButtons: true,
 
       regionStyle: {

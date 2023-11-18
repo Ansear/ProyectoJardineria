@@ -46,3 +46,31 @@ document.addEventListener("DOMContentLoaded", () => {
   chart04();
   map01();
 });
+
+// Tu función asíncrona para realizar la solicitud GET
+let enviar = async () => {
+  try {
+    const peticion = await fetch("http://localhost:5286/api/country");
+    let res = await peticion.json();
+
+    // Limpia el contenido actual del div
+    document.getElementById("resultado").innerHTML = "";
+
+    // Itera sobre los elementos y agrégales al div
+    res.map(element => {
+      // Crea un nuevo elemento de párrafo
+      const nuevoParrafo = document.createElement("p");
+      
+      // Establece el contenido del párrafo con el valor del id
+      nuevoParrafo.textContent = element.name;
+
+      // Agrega el párrafo al div
+      document.getElementById("resultado").appendChild(nuevoParrafo);
+    });
+  } catch (error) {
+    console.error("Error al obtener y mostrar los datos:", error);
+  }
+}
+
+// Llama a la función para realizar la solicitud y mostrar los datos
+enviar();
