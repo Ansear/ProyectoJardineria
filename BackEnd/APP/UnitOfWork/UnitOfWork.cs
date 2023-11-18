@@ -97,6 +97,84 @@ namespace APP.UnitOfWork
             }
         }
 
+        private ProductRepository _product;  
+        public IProduct Products
+        {
+            get
+            {
+                if (_product == null)
+                {
+                    _product = new ProductRepository(_context);
+                }
+                return _product;
+            }
+        }
+
+        private OrderRepository _order;  
+        public IOrder Orders
+        {
+            get
+            {
+                if (_order == null)
+                {
+                    _order = new OrderRepository(_context);
+                }
+                return _order;
+            }
+        }
+
+        private OrderDetailRepository _orderDetail; 
+        public IOrderDetail OrderDetails
+        {
+            get
+            {
+                if (_orderDetail == null)
+                {
+                    _orderDetail = new OrderDetailRepository(_context);
+                }
+                return _orderDetail;
+            }
+        }
+
+        private PaymentRepository _payment; 
+        public IPayment Payments
+        {
+            get
+            {
+                if (_payment == null)
+                {
+                    _payment = new PaymentRepository(_context);
+                }
+                return _payment;
+            }
+        }
+
+        private PaymentFormRepository _paymentForm; 
+        public IPaymentForm PaymentForms
+        {
+            get
+            {
+                if (_paymentForm == null)
+                {
+                    _paymentForm = new PaymentFormRepository(_context);
+                }
+                return _paymentForm;
+            }
+        }
+
+        private ProductGammaRepository _productGamma; 
+        public IProductGamma ProductGammas
+        {
+            get
+            {
+                if (_productGamma == null)
+                {
+                    _productGamma = new ProductGammaRepository(_context);
+                }
+                return _productGamma;
+            }
+        }
+
         public void Dispose()
         {
             _context.Dispose();
