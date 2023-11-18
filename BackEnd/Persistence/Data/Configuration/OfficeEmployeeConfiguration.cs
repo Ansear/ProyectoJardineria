@@ -16,13 +16,13 @@ namespace Persistence.Data.Configuration
 
             builder.HasKey(e => new { e.IdOffice, e.IdEmployee });
 
-            // builder.HasOne(p => p.Offices)
-            //     .WithMany(p => p.OfficeEmployees)
-            //     .HasForeignKey(p => p.IdOffice);
+            builder.HasOne(p => p.Office)
+                .WithMany(p => p.OfficeEmployees)
+                .HasForeignKey(p => p.IdOffice);
 
-            // builder.HasOne(p => p.Employees)
-            //     .WithMany(p => p.OfficeEmployees)
-            //     .HasForeignKey(p => p.IdEmployee);
+            builder.HasOne(p => p.Employee)
+                .WithMany(p => p.OfficeEmployee)
+                .HasForeignKey(p => p.IdEmployee);
         }
     }
 }

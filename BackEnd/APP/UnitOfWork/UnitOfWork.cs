@@ -18,6 +18,13 @@ namespace APP.UnitOfWork
         private IOfficeEmployee _officeEmployees;
         private ISupplier _suppliers;
         private ITypePerson _typePersons;
+        public IAddress _address;
+        public ICountry _countries;
+        public IState _state;
+        public ICity _cities;
+        public IOffice _offices;
+        public IPhone _phones;
+
         private readonly GardenContext _context;
 
         public UnitOfWork(GardenContext context)
@@ -94,6 +101,175 @@ namespace APP.UnitOfWork
                     _typePersons = new TypePersonRepository(_context);
                 }
                 return _typePersons;
+            }
+        }
+        public IAddress Address
+        {
+            get
+            {
+                if (_address == null)
+                {
+                    _address = new AddressRepository(_context);
+                }
+                return _address;
+            }
+        }
+        public ICountry Countries
+        {
+            get
+            {
+                if (_countries == null)
+                {
+                    _countries = new CountryRepository(_context);
+                }
+                return _countries;
+            }
+        }
+        public IState States
+        {
+            get
+            {
+                if (_state == null)
+                {
+                    _state = new StateRepository(_context);
+                }
+                return _state;
+            }
+        }
+        public ICity Cities
+        {
+            get
+            {
+                if (_cities == null)
+                {
+                    _cities = new CityRepository(_context);
+                }
+                return _cities;
+            }
+        }
+        public IOffice Offices
+        {
+            get
+            {
+                if (_offices == null)
+                {
+                    _offices = new OfficeRepository(_context);
+                }
+                return _offices;
+            }
+        }
+        public IPhone Phones
+        {
+            get
+            {
+                if (_phones == null)
+                {
+                    _phones = new PhoneRepository(_context);
+                }
+                return _phones;
+            }
+        }
+        private ProductRepository _product;  
+        public IProduct Products
+        {
+            get
+            {
+                if (_product == null)
+                {
+                    _product = new ProductRepository(_context);
+                }
+                return _product;
+            }
+        }
+
+        private OrderRepository _order;  
+        public IOrder Orders
+        {
+            get
+            {
+                if (_order == null)
+                {
+                    _order = new OrderRepository(_context);
+                }
+                return _order;
+            }
+        }
+
+        private OrderDetailRepository _orderDetail; 
+        public IOrderDetail OrderDetails
+        {
+            get
+            {
+                if (_orderDetail == null)
+                {
+                    _orderDetail = new OrderDetailRepository(_context);
+                }
+                return _orderDetail;
+            }
+        }
+
+        private PaymentRepository _payment; 
+        public IPayment Payments
+        {
+            get
+            {
+                if (_payment == null)
+                {
+                    _payment = new PaymentRepository(_context);
+                }
+                return _payment;
+            }
+        }
+
+        private PaymentFormRepository _paymentForm; 
+        public IPaymentForm PaymentForms
+        {
+            get
+            {
+                if (_paymentForm == null)
+                {
+                    _paymentForm = new PaymentFormRepository(_context);
+                }
+                return _paymentForm;
+            }
+        }
+
+        private ProductGammaRepository _productGamma; 
+        public IProductGamma ProductGammas
+        {
+            get
+            {
+                if (_productGamma == null)
+                {
+                    _productGamma = new ProductGammaRepository(_context);
+                }
+                return _productGamma;
+            }
+        }
+
+        private UserRepository _user;
+        public IUser Users
+        {
+            get
+            {
+                if (_user == null)
+                {
+                    _user = new UserRepository(_context);
+                }
+                return _user;
+            }
+        }
+
+        private RolRepository _rol; 
+        public IRol Rols
+        {
+            get
+            {
+                if (_rol == null)
+                {
+                    _rol = new RolRepository(_context);
+                }
+                return _rol;
             }
         }
 

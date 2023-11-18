@@ -26,6 +26,14 @@ public class GardenContext : DbContext
     public DbSet<OfficeEmployee> OfficeEmployees { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<ProductGamma> ProductGammas { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<PaymentForm> PaymentForms { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Rol> Rols { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

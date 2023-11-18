@@ -23,13 +23,13 @@ namespace Persistence.Data.Configuration
             builder.Property(e => e.SupplierName)
                     .IsRequired();
 
-            builder.Property(e => e.PhoneId)
+            builder.HasOne(p => p.Phones).WithMany(sc => sc.Suppliers).HasForeignKey(sc => sc.PhoneId)
                     .IsRequired();
 
-            builder.Property(e => e.AddressId)
+            builder.HasOne(s => s.Address).WithMany(sc => sc.Suppliers).HasForeignKey(sc => sc.AddressId)
                     .IsRequired();
 
-            builder.Property(e => e.TypePersonId)
+            builder.HasOne(tp => tp.TypePerson).WithMany(sc => sc.Suppliers).HasForeignKey(sc => sc.TypePersonId)
                     .IsRequired();
         }
     }

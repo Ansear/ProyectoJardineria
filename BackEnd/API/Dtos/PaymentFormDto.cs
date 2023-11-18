@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace API.Dtos
 {
-    public class DtoBase
+    public class PaymentFormDto
     {
+        public string Id { get; set; }
+        public string PaymentFormName { get; set; }
         
     }
 }

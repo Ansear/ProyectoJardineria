@@ -13,5 +13,7 @@ namespace Domain.Entities
         public string EmployeeEmail { get; set; }
         public string EmployeePosition { get; set; }
         public ICollection<Boss> Bosses { get; set; }
+        public ICollection<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
+        public ICollection<OfficeEmployee> OfficeEmployee { get; set; }
     }
 }
