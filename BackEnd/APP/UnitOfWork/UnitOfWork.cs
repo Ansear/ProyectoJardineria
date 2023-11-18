@@ -18,6 +18,13 @@ namespace APP.UnitOfWork
         private IOfficeEmployee _officeEmployees;
         private ISupplier _suppliers;
         private ITypePerson _typePersons;
+        public IAddress _address;
+        public ICountry _countries;
+        public IState _state;
+        public ICity _cities;
+        public IOffice _offices;
+        public IPhone _phones;
+
         private readonly GardenContext _context;
 
         public UnitOfWork(GardenContext context)
@@ -96,7 +103,72 @@ namespace APP.UnitOfWork
                 return _typePersons;
             }
         }
-
+        public IAddress Address
+        {
+            get
+            {
+                if (_address == null)
+                {
+                    _address = new AddressRepository(_context);
+                }
+                return _address;
+            }
+        }
+        public ICountry Countries
+        {
+            get
+            {
+                if (_countries == null)
+                {
+                    _countries = new CountryRepository(_context);
+                }
+                return _countries;
+            }
+        }
+        public IState States
+        {
+            get
+            {
+                if (_state == null)
+                {
+                    _state = new StateRepository(_context);
+                }
+                return _state;
+            }
+        }
+        public ICity Cities
+        {
+            get
+            {
+                if (_cities == null)
+                {
+                    _cities = new CityRepository(_context);
+                }
+                return _cities;
+            }
+        }
+        public IOffice Offices
+        {
+            get
+            {
+                if (_offices == null)
+                {
+                    _offices = new OfficeRepository(_context);
+                }
+                return _offices;
+            }
+        }
+        public IPhone Phones
+        {
+            get
+            {
+                if (_phones == null)
+                {
+                    _phones = new PhoneRepository(_context);
+                }
+                return _phones;
+            }
+        }
         public void Dispose()
         {
             _context.Dispose();

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using APP.UnitOfWork;
 using AspNetCoreRateLimit;
+using Domain.Interfaces;
 
 namespace API.Extensions
 {
@@ -42,6 +44,10 @@ namespace API.Extensions
                         }
                 };
             });
+        }
+        public static void AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }
