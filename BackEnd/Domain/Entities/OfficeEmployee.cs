@@ -9,7 +9,7 @@ namespace Domain.Entities
     {
         public string IdEmployee { get; set; }
         public string IdOffice { get; set; }
-        public Employee Employees { get; set; }
-        // public Office Offices { get; set; }
+        public Employee Employee { get; set; }
+        public Office Office { get; set; }
     }
 }

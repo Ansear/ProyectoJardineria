@@ -14,5 +14,6 @@ namespace Domain.Entities
         public string EmployeePosition { get; set; }
         public ICollection<Boss> Bosses { get; set; }
         public ICollection<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
+        public ICollection<OfficeEmployee> OfficeEmployee { get; set; }
     }
 }

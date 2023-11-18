@@ -10,17 +10,19 @@ namespace Persistence.Data.Configuracion
         {
             builder.ToTable("OrderCustomerEmployee");
 
+            builder.HasKey(e => new { e.IdOrder, e.IdCustomer,e.IdEmployee});
+            
             builder.HasOne(p => p.Order)
-                 .WithMany(p => p.OrderCustomerEmployees)
-                 .HasForeignKey(p => p.IdOrder);
+                .WithMany(p => p.OrderCustomerEmployees)
+                .HasForeignKey(p => p.IdOrder);
 
             builder.HasOne(p => p.Customer)
-                 .WithMany(p => p.OrderCustomerEmployees)
-                 .HasForeignKey(p => p.IdCustomer);
+                .WithMany(p => p.OrderCustomerEmployees)
+                .HasForeignKey(p => p.IdCustomer);
 
             builder.HasOne(p => p.Employee)
-                 .WithMany(p => p.OrderCustomerEmployees)
-                 .HasForeignKey(p => p.IdEmployee);
+                .WithMany(p => p.OrderCustomerEmployees)
+                .HasForeignKey(p => p.IdEmployee);
 
         }
     }

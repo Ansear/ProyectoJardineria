@@ -19,4 +19,6 @@ public class Address : BaseEntityInt
     public int IdCity { get; set; }
     public City Cities { get; set; }
     public ICollection<Office> Offices { get; set; }
+    public ICollection<Supplier> Suppliers { get; set; }
+    public ICollection<Customer> Customers { get; set; }
 }

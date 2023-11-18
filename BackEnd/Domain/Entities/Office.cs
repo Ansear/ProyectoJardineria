@@ -13,4 +13,5 @@ public class Office : BaseEntityVarchar
     [Required]
     public int IdAddress { get; set; }
     public Address Address { get; set; }
+    public ICollection<OfficeEmployee> OfficeEmployees { get; set; }
 }

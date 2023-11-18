@@ -10,11 +10,11 @@ namespace Domain.Entities
         public int SupplierCode { get; set; }
         public string SupplierName { get; set; }
         public int PhoneId { get; set; }
-        // public Phone Phones { get; set; }
+        public Phone Phones { get; set; }
         public int AddressId { get; set; }
-        // public Address Addresses { get; set; }
+        public Address Address { get; set; }
         public int TypePersonId { get; set; }
-        public TypePerson TypePersons { get; set; }
+        public TypePerson TypePerson { get; set; }
         public ICollection<ProductSupplier> ProductSuppliers { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Persistence.Data.Configuracion
 
             builder.Property(e => e.ExpectedDate)
                  .IsRequired()
-                 .HasColumnType("DateOnly");
+                 .HasColumnType("DateTime");
 
             builder.Property(e => e.DeliveryDate)
             .IsRequired()

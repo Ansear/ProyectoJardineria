@@ -8,7 +8,7 @@ namespace Domain.Entities
     public class Order : BaseEntityInt
     {
         public DateTime OrderDate { get; set; }
-        public DateOnly ExpectedDate { get; set; }
+        public DateTime ExpectedDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public string OrderStatus { get; set; }
         public string OrderComments { get; set; }

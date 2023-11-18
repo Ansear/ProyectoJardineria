@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class OrderCustomerEmployee
+    public class OrderCustomerEmployee 
     {
         public int IdOrder { get; set; }
         public Order Order { get; set; }
