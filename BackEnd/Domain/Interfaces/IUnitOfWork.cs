@@ -13,12 +13,14 @@ namespace Domain.Interfaces
         IOfficeEmployee OfficeEmployees { get; }
         ISupplier Suppliers { get; }
         ITypePerson TypePersons { get; }
-        IOrder Orders { get;}
-        IOrderDetail OrderDetails { get;}
-        IPayment Payments { get;}
-        IPaymentForm PaymentForms { get;}
-        IProduct Products { get;}
-        IProductGamma ProductGammas { get;}
+        IOrder Orders { get; }
+        IOrderDetail OrderDetails { get; }
+        IPayment Payments { get; }
+        IPaymentForm PaymentForms { get; }
+        IProduct Products { get; }
+        IProductGamma ProductGammas { get; }
+        IRol Rols { get; }
+        IUser Users { get; }
         Task<int> SaveAsync();
     }
 }

@@ -175,6 +175,32 @@ namespace APP.UnitOfWork
             }
         }
 
+        private UserRepository _user;
+        public IUser Users
+        {
+            get
+            {
+                if (_user == null)
+                {
+                    _user = new UserRepository(_context);
+                }
+                return _user;
+            }
+        }
+
+        private RolRepository _rol; 
+        public IRol Rols
+        {
+            get
+            {
+                if (_rol == null)
+                {
+                    _rol = new RolRepository(_context);
+                }
+                return _rol;
+            }
+        }
+
         public void Dispose()
         {
             _context.Dispose();
