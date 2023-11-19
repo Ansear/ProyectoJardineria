@@ -7,7 +7,7 @@ namespace API.Dtos
 {
     public class BossDto
     {
-        public string IdBoss{ get; set; }
-        public string IdEmployee { get; set; }
+        public string Id{ get; set; }
+        public string Name { get; set; }
     }
 }

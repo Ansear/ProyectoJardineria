@@ -63,8 +63,8 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
-            bossDto.IdBoss = boss.IdBoss;
-            return CreatedAtAction(nameof(Post), new { id = bossDto.IdBoss }, bossDto);
+            bossDto.Id = boss.Id;
+            return CreatedAtAction(nameof(Post), new { id = bossDto.Id }, bossDto);
         }
 
         [HttpPut("{id}")]
@@ -73,12 +73,12 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BossDto>> Put(string id, [FromBody] BossDto bossDto)
         {
-            if (bossDto.IdBoss == null)
+            if (bossDto.Id == null)
             {
-                bossDto.IdBoss = id;
+                bossDto.Id = id;
             }
 
-            if (bossDto.IdBoss != id)
+            if (bossDto.Id != id)
             {
                 return BadRequest();
             }
