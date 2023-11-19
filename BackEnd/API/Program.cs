@@ -1,5 +1,6 @@
 using System.Reflection;
 using API.Extensions;
+using Domain.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
