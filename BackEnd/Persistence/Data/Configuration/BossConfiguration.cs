@@ -6,23 +6,18 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.Data.Configuration
+namespace Persistence.Data.Configuration;
+public class BossConfiguration : IEntityTypeConfiguration<Boss>
 {
-    public class BossConfiguration : IEntityTypeConfiguration<Boss>
+    public void Configure(EntityTypeBuilder<Boss> builder)
     {
-        public void Configure(EntityTypeBuilder<Boss> builder)
-        {
-            builder.ToTable("Boss");
+        builder.ToTable("Boss");
 
-            builder.HasKey(e => new { e.Id, e.IdEmployee });
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id);
 
-            builder.HasOne(p => p.Employees)
-                .WithMany(p => p.Bosses)
-                .HasForeignKey(p => p.Id);
-
-            builder.HasOne(p => p.Employees)
-                .WithMany(p => p.Bosses)
-                .HasForeignKey(p => p.IdEmployee);
-        }
+        builder.Property(e => e.Name)
+             .IsRequired()
+             .HasMaxLength(30);
     }
 }
