@@ -490,11 +490,10 @@ namespace Persistence.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("RolName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar")
-                        .HasColumnName("rolName");
+                        .HasColumnType("varchar");
 
                     b.HasKey("Id");
 

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 namespace API.Helpers;
 public class Authorization
 {
-    public enum Rols
+    public enum Roles
     {
         Administrator,
         Customer,
         Emloyee
     }
 
-    public const Rols rol_default = Rols.Customer;
+    public const Roles rol_default = Roles.Customer;
 }

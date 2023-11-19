@@ -16,8 +16,7 @@ public class RolConfiguration : IEntityTypeConfiguration<Rol>
         builder.ToTable("rol");
         builder.Property(p => p.Id)
                 .IsRequired();
-        builder.Property(p => p.Nombre)
-        .HasColumnName("rolName")
+        builder.Property(p => p.RolName)
         .HasColumnType("varchar")
         .HasMaxLength(50)
         .IsRequired();

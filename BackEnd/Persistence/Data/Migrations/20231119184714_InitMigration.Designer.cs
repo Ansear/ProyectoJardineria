@@ -11,8 +11,8 @@ using Persistence.Data;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(GardenContext))]
-    [Migration("20231118162508_SecondMigrations")]
-    partial class SecondMigrations
+    [Migration("20231119184714_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -493,11 +493,10 @@ namespace Persistence.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("RolName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar")
-                        .HasColumnName("rolName");
+                        .HasColumnType("varchar");
 
                     b.HasKey("Id");
 

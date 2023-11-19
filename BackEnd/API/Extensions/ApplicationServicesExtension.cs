@@ -12,6 +12,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using API.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Extensions
 {
@@ -54,8 +55,11 @@ namespace API.Extensions
         }
         public static void AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
+
         public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
         {
             //Configuration from AppSettings

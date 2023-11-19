@@ -13,6 +13,6 @@ public class RolRepository : GenericRepositoryInt<Rol>, IRol
 
     public RolRepository(GardenContext context) : base(context)
     {
-       _context = context;
+        _context = context;
     }
 }
