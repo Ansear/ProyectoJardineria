@@ -3,7 +3,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import "../css/style.css";
 
 import Alpine from "alpinejs";
-import persist from '@alpinejs/persist'
+import persist from "@alpinejs/persist";
 import flatpickr from "flatpickr";
 import chart01 from "./components/chart-01";
 import chart02 from "./components/chart-02";
@@ -11,7 +11,7 @@ import chart03 from "./components/chart-03";
 import chart04 from "./components/chart-04";
 import map01 from "./components/map-01";
 
-Alpine.plugin(persist)
+Alpine.plugin(persist);
 window.Alpine = Alpine;
 Alpine.start();
 
@@ -47,35 +47,114 @@ document.addEventListener("DOMContentLoaded", () => {
   map01();
 });
 
-// Tu función asíncrona para realizar la solicitud GET
-let enviar = async () => {
-  try {
-    const peticion = await fetch("http://localhost:5286/api/country");
-    let res = await peticion.json();
+const registrationForm = document.getElementById("registrationForm");
 
-    // Limpia el contenido actual del div
-    document.getElementById("resultado").innerHTML = "";
+registrationForm.addEventListener("submit", function (event) {
+  event.preventDefault();
 
-    // Itera sobre los elementos y agrégales al div
-    res.map(element => {
-      // Crea un nuevo elemento de párrafo
-      const nuevoParrafo = document.createElement("p");
-      
-      // Establece el contenido del párrafo con el valor del id
-      nuevoParrafo.textContent = element.name;
+  const name = document.querySelector('[placeholder="Enter your full name"]').value;
+  const email = document.querySelector('[placeholder="Enter your email"]').value;
+  const password = document.querySelector('[placeholder="Enter your password"]').value;
 
-      // Agrega el párrafo al div
-      document.getElementById("resultado").appendChild(nuevoParrafo);
+  const userData = {
+    name: name,
+    email: email,
+    password: password,
+  };
+
+  // Envía los datos del usuario al servidor para autenticación
+  fetch("http://localhost:5286/api/User/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Almacena el token JWT en el localStorage
+      localStorage.setItem("jwtToken", data.token);
+
+      console.log("Redirección a index.html");
+      window.location.href = "signin.html";
+    })
+    .catch((error) => {
+      console.error("Error de autenticación:", error);
     });
-  } catch (error) {
-    console.error("Error al obtener y mostrar los datos:", error);
-  }
-}
-
-// Llama a la función para realizar la solicitud y mostrar los datos
-enviar();
-
-document.getElementById('signinbutton1').addEventListener('click', function() {
-  // Redirige a la página index.html
-  window.location.href = 'index.html';
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const loginForm = document.getElementById("loginForm");
+
+  loginForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById("emailInput").value;
+    const password = document.getElementById("passwordInput").value;
+
+    const userData = {
+      email: email,
+      password: password,
+    };
+
+    // Realiza una solicitud al servidor para autenticar al usuario
+    fetch("http://localhost:5286/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Almacena el token JWT en el localStorage
+        localStorage.setItem("jwtToken", data.token);
+
+        // Redirige a la página de inicio después de iniciar sesión
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        console.error("Error de autenticación:", error);
+      });
+  });
+
+  // Verifica si hay un token JWT almacenado y redirige a la página de inicio si es así
+  const jwtToken = localStorage.getItem("jwtToken");
+  if (jwtToken) {
+    window.location.href = "index.html";
+  }
+});
+
+
+// // Tu función asíncrona para realizar la solicitud GET
+// let enviar = async () => {
+//   try {
+//     const peticion = await fetch("http://localhost:5286/api/country");
+//     let res = await peticion.json();
+
+//     // Limpia el contenido actual del div
+//     document.getElementById("resultado").innerHTML = "";
+
+//     // Itera sobre los elementos y agrégales al div
+//     res.map((element) => {
+//       // Crea un nuevo elemento de párrafo
+//       const nuevoParrafo = document.createElement("p");
+
+//       // Establece el contenido del párrafo con el valor del id
+//       nuevoParrafo.textContent = element.name;
+
+//       // Agrega el párrafo al div
+//       document.getElementById("resultado").appendChild(nuevoParrafo);
+//     });
+//   } catch (error) {
+//     console.error("Error al obtener y mostrar los datos:", error);
+//   }
+// };
+
+// // Llama a la función para realizar la solicitud y mostrar los datos
+// enviar();
+
+// document.getElementById("signinbutton1").addEventListener("click", function () {
+//   // Redirige a la página index.html
+//   window.location.href = "./index.html";
+// });

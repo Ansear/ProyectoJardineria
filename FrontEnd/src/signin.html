@@ -23,9 +23,6 @@
 
     <!-- ===== Content Area Start ===== -->
     <div class="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-      <!-- ===== Header Start ===== -->
-      <include src="./partials/header.html" />
-      <!-- ===== Header End ===== -->
 
       <!-- ===== Main Content Start ===== -->
       <main>
@@ -46,7 +43,7 @@
           <!-- Breadcrumb End -->
 
           <!-- ====== Forms Section Start -->
-          <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ">
             <div class="flex flex-wrap items-center">
               <div class="hidden w-full xl:block xl:w-1/2">
                 <div class="py-17.5 px-26 text-center">
@@ -151,11 +148,11 @@
                     Sign In to TailAdmin
                   </h2>
 
-                  <form>
+                  <form id="loginForm">
                     <div class="mb-4">
                       <label class="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                       <div class="relative">
-                        <input type="email" placeholder="Enter your email"
+                        <input id="emailInput" type="email" placeholder="Enter your email"
                           class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
 
                         <span class="absolute right-4 top-4">
@@ -172,9 +169,9 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="mb-2.5 block font-medium text-black dark:text-white">Re-type Password</label>
+                      <label class="mb-2.5 block font-medium text-black dark:text-white">Type Password</label>
                       <div class="relative">
-                        <input type="password" placeholder="6+ Characters, 1 Capital letter"
+                        <input id="passwordInput" type="password" placeholder="6+ Characters, 1 Capital letter"
                           class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
 
                         <span class="absolute right-4 top-4">
@@ -194,7 +191,7 @@
                     </div>
 
                     <div class="mb-5">
-                      <input id="signinbutton1" type="submit" value="Sign In"
+                      <input type="submit" value="Sign In"
                         class="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 font-medium text-white transition hover:bg-opacity-90" />
                     </div>
 
