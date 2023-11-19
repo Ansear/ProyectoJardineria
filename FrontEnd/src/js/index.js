@@ -74,3 +74,8 @@ let enviar = async () => {
 
 // Llama a la función para realizar la solicitud y mostrar los datos
 enviar();
+
+document.getElementById('signinbutton1').addEventListener('click', function() {
+  // Redirige a la página index.html
+  window.location.href = 'index.html';
+});
