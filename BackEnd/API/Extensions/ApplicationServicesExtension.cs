@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using API.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace API.Extensions
 {
@@ -86,6 +88,16 @@ namespace API.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
                     };
                 });
+        }
+
+        public static void ConfigureApiVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = new QueryStringApiVersionReader("ver");//Variable que permitira especificar la version a utilizar en la petición
+            });
         }
     }
 }

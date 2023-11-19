@@ -9,6 +9,8 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 public class CountryController : BaseController
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -20,12 +22,22 @@ public class CountryController : BaseController
         _mapper = mapper;
     }
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IEnumerable<CountryDto>>> Get()
     {
         var countries = await _unitOfWork.Countries.GetAllAsync();
         return _mapper.Map<List<CountryDto>>(countries);
+    }
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<StateDto>>> Get2()
+    {
+        var countries = await _unitOfWork.States.GetAllAsync();
+        return _mapper.Map<List<StateDto>>(countries);
     }
 
     [HttpGet("{id}")]
