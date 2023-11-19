@@ -25,7 +25,7 @@ public class UserController : BaseController
         return Ok(result);
     }
 
-    [HttpPost("token")]
+    [HttpPost("login")]
     public async Task<IActionResult> GetTokenAsync(LoginDto model)
     {
         var result = await _userService.GetTokenAsync(model);
@@ -35,9 +35,13 @@ public class UserController : BaseController
         }
         catch (Exception)
         {
-            return BadRequest("Invalid credentials");
+            var dataUserDto = new{
+            IsAuthenticated = false,
+            Message = $"Incorrect user credentials {model.Email}."
+            };
+            return BadRequest(dataUserDto);
         }
-        return Ok(result);
+        return Ok(result);  
     }
 
     [HttpPost("addrole")]

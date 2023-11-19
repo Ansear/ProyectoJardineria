@@ -25,6 +25,14 @@ public class UserRepository : GenericRepositoryInt<User>, IUser
             .FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
     }
 
+    public async Task<User> GetByUserEmailAsync(string email)
+    {
+        return await _context.Users
+            .Include(u => u.Rols)
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+    }
+
     public async Task<User> GetByUsernameAsync(string username)
     {
         return await _context.Users

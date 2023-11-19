@@ -52,12 +52,12 @@ const registrationForm = document.getElementById("registrationForm");
 registrationForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  const name = document.querySelector('[placeholder="Enter your full name"]').value;
+  const username = document.querySelector('[placeholder="Enter your full name"]').value;
   const email = document.querySelector('[placeholder="Enter your email"]').value;
   const password = document.querySelector('[placeholder="Enter your password"]').value;
 
   const userData = {
-    name: name,
+    username: username,
     email: email,
     password: password,
   };
@@ -70,16 +70,27 @@ registrationForm.addEventListener("submit", function (event) {
     },
     body: JSON.stringify(userData),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      // Manejo especial para respuestas que no son JSON
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Error en la solicitud: ${response.status}, Contenido: ${text}`);
+        });
+      }
+      return response.text(); // Usamos response.text() ya que el servidor devuelve una cadena de texto
+    })
     .then((data) => {
-      // Almacena el token JWT en el localStorage
-      localStorage.setItem("jwtToken", data.token);
+      // Aquí `data` contiene la cadena de texto devuelta por la API
+      console.log("Respuesta de la API:", data);
 
-      console.log("Redirección a index.html");
+      // Redirige a signin.html después de manejar la respuesta exitosa
       window.location.href = "signin.html";
     })
     .catch((error) => {
       console.error("Error de autenticación:", error);
+
+      // Puedes mostrar un mensaje de error en tu formulario
+      // o redirigir a una página de error, según tus necesidades
     });
 });
 
@@ -98,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Realiza una solicitud al servidor para autenticar al usuario
-    fetch("http://localhost:5286/api/auth/login", {
+    fetch("http://localhost:5286/api/User/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -71,46 +71,45 @@ public class UserService : IUserService
     public async Task<DataUserDto> GetTokenAsync(LoginDto model)
     {
         DataUserDto dataUserDto = new DataUserDto();
-        var user = await _unitOfWork.Users.GetByUsernameAsync(model.Username);
-        if (user == null)
+        var user = await _unitOfWork.Users.GetByUserEmailAsync(model.Email);
+        if (user != null)
         {
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, model.Password);
+            if (result == PasswordVerificationResult.Success)
+            {
+                dataUserDto.IsAuthenticated = true;
+                JwtSecurityToken jwtSecurityToken = CreateJwtToken(user);
+                dataUserDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                dataUserDto.Email = user.Email;
+                dataUserDto.UserName = user.Username;
+                dataUserDto.Roles = user.Rols
+                                    .Select(u => u.RolName)
+                                    .ToList();
+                if (user.RefreshTokens.Any(a => a.IsActive))
+                {
+                    var activeRefreshToken = user.RefreshTokens.Where(a => a.IsActive == true).FirstOrDefault();
+                    dataUserDto.RefreshToken = activeRefreshToken.Token;
+                    dataUserDto.RefreshTokenExpiration = activeRefreshToken.Expires;
+                }
+                else
+                {
+                    var refreshToken = CreateRefreshToken();
+                    dataUserDto.RefreshToken = refreshToken.Token;
+                    dataUserDto.RefreshTokenExpiration = refreshToken.Expires;
+                    user.RefreshTokens.Add(refreshToken);
+                    _unitOfWork.Users.Update(user);
+                    await _unitOfWork.SaveAsync();
+                }
+                return dataUserDto;
+            }
             dataUserDto.IsAuthenticated = false;
-            dataUserDto.Message = $"User does not exist with Username {model.Username}.";
+            dataUserDto.Message = $"Incorrect user credentials {user.Username}.";
             return dataUserDto;
         }
-        var result = _passwordHasher.VerifyHashedPassword(user, user.Password, model.Password);
-        if (result == PasswordVerificationResult.Success)
-        {
-            dataUserDto.IsAuthenticated = true;
-            JwtSecurityToken jwtSecurityToken = CreateJwtToken(user);
-            dataUserDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            dataUserDto.Email = user.Email;
-            dataUserDto.UserName = user.Username;
-            dataUserDto.Roles = user.Rols
-                                .Select(u => u.RolName)
-                                .ToList();
-            if (user.RefreshTokens.Any(a => a.IsActive))
-            {
-                var activeRefreshToken = user.RefreshTokens.Where(a => a.IsActive == true).FirstOrDefault();
-                dataUserDto.RefreshToken = activeRefreshToken.Token;
-                dataUserDto.RefreshTokenExpiration = activeRefreshToken.Expires;
-            }
-            else
-            {
-                var refreshToken = CreateRefreshToken();
-                dataUserDto.RefreshToken = refreshToken.Token;
-                dataUserDto.RefreshTokenExpiration = refreshToken.Expires;
-                user.RefreshTokens.Add(refreshToken);
-                _unitOfWork.Users.Update(user);
-                await _unitOfWork.SaveAsync();
-            }
-            return dataUserDto;
-        }
-        else{
         dataUserDto.IsAuthenticated = false;
-        dataUserDto.Message = $"Credenciales incorrectas para el usuario {user.Username}.";
+        dataUserDto.Message = $"User does not exist with Username {model.Email}.";
         return dataUserDto;
-        }
+
     }
 
     public async Task<string> AddRoleAsync(AddRoleDto model)
