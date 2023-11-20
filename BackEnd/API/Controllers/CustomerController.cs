@@ -118,5 +118,53 @@ namespace API.Controllers
             var result = await _unitOfWork.Customers.GetCustomerByCountry(countryname);
             return Ok(result);
         }
+
+        [HttpGet("CustomersInMadridWithSalesRepresentatives")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomersInMadridWithSalesRepresentatives()
+        {
+            
+            var customers = _context.Customers
+                .Join(
+                    _context.Address,
+                    customer => customer.AddressId,
+                    address => address.Id,
+                    (customer, address) => new { Customer = customer, Address = address })
+                .Join(
+                    _context.Cities,
+                    customerAddress => customerAddress.Address.IdCity,
+                    city => city.Id,
+                    (customerAddress, city) => new { CustomerAddress = customerAddress, City = city })
+                .Join(
+                    _context.OrderCustomerEmployees,
+                    customerCity => customerCity.CustomerAddress.Customer.Id,
+                    orderCustomerEmployee => orderCustomerEmployee.IdCustomer,
+                    (customerCity, orderCustomerEmployee) => new { CustomerCity = customerCity, OrderCustomerEmployee = orderCustomerEmployee })
+                .Where(
+                    combined => combined.CustomerCity.City.Name == "Madrid" &&
+                                (combined.OrderCustomerEmployee.IdEmployee == "11" || combined.OrderCustomerEmployee.IdEmployee == "30"))
+                .Select(
+                    combined => new 
+                    {
+                        Id = combined.CustomerCity.CustomerAddress.Customer.Id,
+                        CustomerName = combined.CustomerCity.CustomerAddress.Customer.CustomerName,
+                        CustomerLastName = combined.CustomerCity.CustomerAddress.Customer.CustomerLastName,
+                        CustomerPhoneId = combined.CustomerCity.CustomerAddress.Customer.CustomerPhoneId,
+                        CustomerFax = combined.CustomerCity.CustomerAddress.Customer.CustomerFax,
+                        AddressId = combined.CustomerCity.CustomerAddress.Customer.AddressId,
+                        CreditLimit = combined.CustomerCity.CustomerAddress.Customer.CreditLimit,
+                        TypePersonId = combined.CustomerCity.CustomerAddress.Customer.TypePersonId,
+                        IdUser = combined.CustomerCity.CustomerAddress.Customer.IdUser
+                    })
+                .ToList();
+
+            if (customers == null || !customers.Any())
+            {
+                return NotFound("No customers found that meet the criteria.");
+            }
+
+            return Ok(customers);
+        }
     }
 }

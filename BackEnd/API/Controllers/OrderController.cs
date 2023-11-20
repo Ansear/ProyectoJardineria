@@ -8,6 +8,8 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 
 namespace API.Controllers
 {
@@ -15,11 +17,13 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public OrderController(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -75,12 +79,12 @@ namespace API.Controllers
                 OrderDto.Id = id;
             }
 
-            if(OrderDto.Id != id)
+            if (OrderDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(OrderDto == null)
+            if (OrderDto == null)
             {
                 return NotFound();
             }
@@ -105,6 +109,23 @@ namespace API.Controllers
             _unitOfWork.Orders.Remove(nombreVariable);
             await _unitOfWork.SaveAsync();
             return NoContent();
+        }
+
+        [HttpGet("OrdersDeliveredBeforeExpected")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> GetOrdersDeliveredBeforeExpected()
+        {
+            var orders = await _context.Orders
+        .FromSqlRaw("SELECT Id, OrderDate, ExpectedDate, DeliveryDate, IdStatus, OrderComments, IdPayment, Total FROM `Order` WHERE DeliveryDate <= ADDDATE(ExpectedDate, -2)")
+        .ToListAsync();
+
+            if (orders == null || !orders.Any())
+            {
+                return NotFound("No orders found that meet the criteria.");
+            }
+
+            return Ok(orders);
         }
     }
 }

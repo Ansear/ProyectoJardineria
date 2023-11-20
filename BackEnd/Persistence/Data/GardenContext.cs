@@ -35,6 +35,7 @@ public class GardenContext : DbContext
     public DbSet<UserRol> UsersRols { get; set; }
     public DbSet<Rol> Rols { get; set; }
     public DbSet<StatusOrder> StatusOrders { get; set; }
+    public DbSet<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

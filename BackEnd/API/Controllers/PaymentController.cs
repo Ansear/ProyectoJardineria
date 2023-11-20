@@ -8,18 +8,21 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Data;
 
-namespace API.Controllers 
+namespace API.Controllers
 {
     public class PaymentController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public PaymentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public PaymentController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -75,17 +78,17 @@ namespace API.Controllers
                 PaymentDto.Id = id;
             }
 
-            if(PaymentDto.Id != id)
+            if (PaymentDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(PaymentDto == null)
+            if (PaymentDto == null)
             {
                 return NotFound();
             }
 
-             // Por si requiero la fecha actual
+            // Por si requiero la fecha actual
             /*if (PaymentDto.Fecha == DateTime.MinValue)
             {
                 PaymentDto.Fecha = DateTime.Now;
@@ -112,6 +115,30 @@ namespace API.Controllers
             _unitOfWork.Payments.Remove(nombreVariable);
             await _unitOfWork.SaveAsync();
             return NoContent();
+        }
+
+        [HttpGet("PaymentsIn2008ByPaypal")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetPaymentsIn2008ByPaypal()
+        {
+            var payments = _context.Payments
+                .Where(p => p.PaymentDate.Year == 2008 && p.PaymentForm.PaymentFormName == "Paypal")
+                .OrderByDescending(p => p.PaymentDate)
+                .Select(p => new    
+                {
+                    Id = p.Id,
+                    PaymentDate = p.PaymentDate,
+                    PaymentFormName = p.PaymentForm.PaymentFormName
+                })
+                .ToList();
+
+            if (payments == null || !payments.Any())
+            {
+                return NotFound("No payments found that meet the criteria.");
+            }
+
+            return Ok(payments);
         }
     }
 }
