@@ -11,7 +11,7 @@ using Persistence.Data;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(GardenContext))]
-    [Migration("20231120154157_InitialMigration")]
+    [Migration("20231120185721_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -244,6 +244,9 @@ namespace Persistence.Data.Migrations
                     b.Property<int>("IdPayment")
                         .HasColumnType("int");
 
+                    b.Property<int>("IdStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("OrderComments")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
@@ -251,17 +254,15 @@ namespace Persistence.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("DateTime");
 
-                    b.Property<string>("OrderStatus")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("varchar(25)");
-
                     b.Property<int>("Total")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdPayment")
+                        .IsUnique();
+
+                    b.HasIndex("IdStatus")
                         .IsUnique();
 
                     b.ToTable("Order", (string)null);
@@ -515,6 +516,20 @@ namespace Persistence.Data.Migrations
                     b.ToTable("state", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.StatusOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusOrder", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
@@ -726,7 +741,15 @@ namespace Persistence.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.StatusOrder", "StatusOrder")
+                        .WithOne("Order")
+                        .HasForeignKey("Domain.Entities.Order", "IdStatus")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Payment");
+
+                    b.Navigation("StatusOrder");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderCustomerEmployee", b =>
@@ -960,6 +983,11 @@ namespace Persistence.Data.Migrations
             modelBuilder.Entity("Domain.Entities.State", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("Domain.Entities.StatusOrder", b =>
+                {
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Domain.Entities.Supplier", b =>

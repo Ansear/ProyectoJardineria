@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 namespace API.Controllers
@@ -55,7 +56,7 @@ namespace API.Controllers
         public async Task<ActionResult<Employee>> Post(EmployeeDto EmployeeDto)
         {
             var Employee = _mapper.Map<Employee>(EmployeeDto);
-            this._unitOfWork.Employees.Add(Employee);
+            _unitOfWork.Employees.Add(Employee);
             await _unitOfWork.SaveAsync();
 
             if (Employee == null)
@@ -117,6 +118,29 @@ namespace API.Controllers
         {
             var result = await _unitOfWork.Employees.GetEmployeesByIdBoss(id);
             return Ok(result);
+        }
+        [HttpGet("ceo")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> GetCeo()
+        {
+            var ceo = await _context.Employees
+                .Where(e => e.Id == e.IdBoss) 
+                .Select(e => new
+                {
+                    Position = e.EmployeePosition,
+                    FirstName = e.EmployeeName,
+                    LastName = e.EmployeeLastName,
+                    Email = e.EmployeeEmail
+                })
+                .FirstOrDefaultAsync();
+
+            if (ceo == null)
+            {
+                return NotFound("CEO not found");
+            }
+
+            return Ok(ceo);
         }
     }
 }

@@ -25,9 +25,6 @@ namespace Persistence.Data.Configuracion
                .IsRequired()
                .HasColumnType("DateTime");
 
-               builder.Property(e => e.OrderStatus)
-                    .IsRequired()
-                    .HasMaxLength(25);
 
                builder.Property(e => e.OrderComments)
                     .HasMaxLength(100);
@@ -35,6 +32,10 @@ namespace Persistence.Data.Configuracion
                builder.HasOne(e => e.Payment)
                     .WithOne(f => f.Order)
                     .HasForeignKey<Order>(p => p.IdPayment);
+               
+               builder.HasOne(e => e.StatusOrder)
+                    .WithOne(f => f.Order)
+                    .HasForeignKey<Order>(p => p.IdStatus);
 
                builder.Property(e => e.Total)
                     .HasColumnType("int")
