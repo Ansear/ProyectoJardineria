@@ -10,7 +10,8 @@ namespace Domain.Entities
         public DateTime OrderDate { get; set; }
         public DateTime ExpectedDate { get; set; }
         public DateTime DeliveryDate { get; set; }
-        public string OrderStatus { get; set; }
+        public int IdStatus { get; set; }
+        public StatusOrder StatusOrder { get; set; }
         public string OrderComments { get; set; }
         public int IdPayment { get; set; }
         public Payment Payment { get; set; }
