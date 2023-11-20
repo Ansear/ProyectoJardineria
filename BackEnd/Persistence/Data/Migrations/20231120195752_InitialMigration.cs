@@ -694,8 +694,7 @@ namespace Persistence.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Order_IdStatus",
                 table: "Order",
-                column: "IdStatus",
-                unique: true);
+                column: "IdStatus");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderCustomerEmployee_IdCustomer",

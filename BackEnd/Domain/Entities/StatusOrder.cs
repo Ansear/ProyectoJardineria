@@ -7,5 +7,5 @@ namespace Domain.Entities;
     public class StatusOrder : BaseEntityInt
     {
         public string Description { get; set; }
-        public Order Order { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }

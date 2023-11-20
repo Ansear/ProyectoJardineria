@@ -122,5 +122,14 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+
+        [HttpGet("GetCustomerByCountry/{countryname}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomerByCountry(string countryname)
+        {
+            var result = await _unitOfWork.Customers.GetCustomerByCountry(countryname);
+            return Ok(result);
+        }
     }
 }
