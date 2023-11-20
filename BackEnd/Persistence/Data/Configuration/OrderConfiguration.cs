@@ -34,8 +34,8 @@ namespace Persistence.Data.Configuracion
                     .HasForeignKey<Order>(p => p.IdPayment);
                
                builder.HasOne(e => e.StatusOrder)
-                    .WithOne(f => f.Order)
-                    .HasForeignKey<Order>(p => p.IdStatus);
+                    .WithMany(f => f.Orders)
+                    .HasForeignKey(p => p.IdStatus);
 
                builder.Property(e => e.Total)
                     .HasColumnType("int")

@@ -11,7 +11,7 @@ using Persistence.Data;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(GardenContext))]
-    [Migration("20231120185721_InitialMigration")]
+    [Migration("20231120195752_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -262,8 +262,7 @@ namespace Persistence.Data.Migrations
                     b.HasIndex("IdPayment")
                         .IsUnique();
 
-                    b.HasIndex("IdStatus")
-                        .IsUnique();
+                    b.HasIndex("IdStatus");
 
                     b.ToTable("Order", (string)null);
                 });
@@ -742,8 +741,8 @@ namespace Persistence.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.StatusOrder", "StatusOrder")
-                        .WithOne("Order")
-                        .HasForeignKey("Domain.Entities.Order", "IdStatus")
+                        .WithMany("Orders")
+                        .HasForeignKey("IdStatus")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -987,7 +986,7 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.StatusOrder", b =>
                 {
-                    b.Navigation("Order");
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Domain.Entities.Supplier", b =>
