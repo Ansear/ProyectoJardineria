@@ -11,8 +11,8 @@ using Persistence.Data;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(GardenContext))]
-    [Migration("20231119213026_InitialMigratiosn")]
-    partial class InitialMigratiosn
+    [Migration("20231120154157_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,21 +66,6 @@ namespace Persistence.Data.Migrations
                     b.HasIndex("IdCity");
 
                     b.ToTable("address", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Boss", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Boss", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
@@ -256,6 +241,9 @@ namespace Persistence.Data.Migrations
                     b.Property<DateTime>("ExpectedDate")
                         .HasColumnType("DateTime");
 
+                    b.Property<int>("IdPayment")
+                        .HasColumnType("int");
+
                     b.Property<string>("OrderComments")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
@@ -268,7 +256,13 @@ namespace Persistence.Data.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25)");
 
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("IdPayment")
+                        .IsUnique();
 
                     b.ToTable("Order", (string)null);
                 });
@@ -334,21 +328,12 @@ namespace Persistence.Data.Migrations
                     b.Property<string>("IdFormPay")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("IdOrder")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("DateTime");
-
-                    b.Property<int>("Total")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdFormPay");
-
-                    b.HasIndex("IdOrder")
-                        .IsUnique();
 
                     b.ToTable("Payment", (string)null);
                 });
@@ -680,8 +665,8 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Employee", b =>
                 {
-                    b.HasOne("Domain.Entities.Boss", "Boss")
-                        .WithMany("Employees")
+                    b.HasOne("Domain.Entities.Employee", "Boss")
+                        .WithMany()
                         .HasForeignKey("IdBoss");
 
                     b.HasOne("Domain.Entities.User", "User")
@@ -733,6 +718,17 @@ namespace Persistence.Data.Migrations
                     b.Navigation("Office");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Order", b =>
+                {
+                    b.HasOne("Domain.Entities.Payment", "Payment")
+                        .WithOne("Order")
+                        .HasForeignKey("Domain.Entities.Order", "IdPayment")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+                });
+
             modelBuilder.Entity("Domain.Entities.OrderCustomerEmployee", b =>
                 {
                     b.HasOne("Domain.Entities.Customer", "Customer")
@@ -782,14 +778,6 @@ namespace Persistence.Data.Migrations
                     b.HasOne("Domain.Entities.PaymentForm", "PaymentForm")
                         .WithMany("Payments")
                         .HasForeignKey("IdFormPay");
-
-                    b.HasOne("Domain.Entities.Order", "Order")
-                        .WithOne("Payments")
-                        .HasForeignKey("Domain.Entities.Payment", "IdOrder")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
 
                     b.Navigation("PaymentForm");
                 });
@@ -899,11 +887,6 @@ namespace Persistence.Data.Migrations
                     b.Navigation("Suppliers");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Boss", b =>
-                {
-                    b.Navigation("Employees");
-                });
-
             modelBuilder.Entity("Domain.Entities.City", b =>
                 {
                     b.Navigation("Address");
@@ -936,8 +919,11 @@ namespace Persistence.Data.Migrations
                     b.Navigation("OrderCustomerEmployees");
 
                     b.Navigation("OrderDetails");
+                });
 
-                    b.Navigation("Payments");
+            modelBuilder.Entity("Domain.Entities.Payment", b =>
+                {
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Domain.Entities.PaymentForm", b =>

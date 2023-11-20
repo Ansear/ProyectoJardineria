@@ -12,7 +12,6 @@ namespace APP.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private IBoss _bosses;
         private ICustomer _customers;
         private IEmployee _employees;
         private IOfficeEmployee _officeEmployees;
@@ -32,17 +31,6 @@ namespace APP.UnitOfWork
             _context = context;
         }
 
-        public IBoss Bosses
-        {
-            get
-            {
-                if (_bosses == null)
-                {
-                    _bosses = new BossRepository(_context);
-                }
-                return _bosses;
-            }
-        }
 
         public ICustomer Customers
         {

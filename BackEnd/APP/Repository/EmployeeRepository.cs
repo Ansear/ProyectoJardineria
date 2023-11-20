@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 namespace APP.Repository
@@ -15,6 +16,11 @@ namespace APP.Repository
         public EmployeeRepository(GardenContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<Employee>> GetEmployeesByIdBoss(string id)
+        {
+            return await _context.Employees.Where(e => e.IdBoss == id).ToListAsync();;
         }
     }
 }

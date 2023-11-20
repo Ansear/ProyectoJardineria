@@ -7,27 +7,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigratiosn : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Boss",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Name = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Boss", x => x.Id);
-                })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -42,26 +27,6 @@ namespace Persistence.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_country", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Order",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    OrderDate = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    ExpectedDate = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    DeliveryDate = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    OrderStatus = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrderComments = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Order", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -192,20 +157,12 @@ namespace Persistence.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     PaymentDate = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    Total = table.Column<int>(type: "int", nullable: false),
                     IdFormPay = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IdOrder = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payment_Order_IdOrder",
-                        column: x => x.IdOrder,
-                        principalTable: "Order",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Payment_PaymentForm_IdFormPay",
                         column: x => x.IdFormPay,
@@ -267,9 +224,9 @@ namespace Persistence.Data.Migrations
                 {
                     table.PrimaryKey("PK_Employee", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employee_Boss_IdBoss",
+                        name: "FK_Employee_Employee_IdBoss",
                         column: x => x.IdBoss,
-                        principalTable: "Boss",
+                        principalTable: "Employee",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Employee_user_IdUser",
@@ -353,33 +310,30 @@ namespace Persistence.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "OrderDetail",
+                name: "Order",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ProductCode = table.Column<string>(type: "varchar(50)", nullable: true)
+                    OrderDate = table.Column<DateTime>(type: "DateTime", nullable: false),
+                    ExpectedDate = table.Column<DateTime>(type: "DateTime", nullable: false),
+                    DeliveryDate = table.Column<DateTime>(type: "DateTime", nullable: false),
+                    OrderStatus = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrderCode = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    UnitPrice = table.Column<int>(type: "int", nullable: false),
-                    LineNumber = table.Column<string>(type: "varchar(35)", maxLength: 35, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    OrderComments = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IdPayment = table.Column<int>(type: "int", nullable: false),
+                    Total = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDetail", x => x.Id);
+                    table.PrimaryKey("PK_Order", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderDetail_Order_OrderCode",
-                        column: x => x.OrderCode,
-                        principalTable: "Order",
+                        name: "FK_Order_Payment_IdPayment",
+                        column: x => x.IdPayment,
+                        principalTable: "Payment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderDetail_Product_ProductCode",
-                        column: x => x.ProductCode,
-                        principalTable: "Product",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -418,6 +372,37 @@ namespace Persistence.Data.Migrations
                         principalTable: "city",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "OrderDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ProductCode = table.Column<string>(type: "varchar(50)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    OrderCode = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<int>(type: "int", nullable: false),
+                    LineNumber = table.Column<string>(type: "varchar(35)", maxLength: 35, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderDetail_Order_OrderCode",
+                        column: x => x.OrderCode,
+                        principalTable: "Order",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderDetail_Product_ProductCode",
+                        column: x => x.ProductCode,
+                        principalTable: "Product",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -681,6 +666,12 @@ namespace Persistence.Data.Migrations
                 column: "IdEmployee");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Order_IdPayment",
+                table: "Order",
+                column: "IdPayment",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderCustomerEmployee_IdCustomer",
                 table: "OrderCustomerEmployee",
                 column: "IdCustomer");
@@ -704,12 +695,6 @@ namespace Persistence.Data.Migrations
                 name: "IX_Payment_IdFormPay",
                 table: "Payment",
                 column: "IdFormPay");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payment_IdOrder",
-                table: "Payment",
-                column: "IdOrder",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_IdGamma",
@@ -765,9 +750,6 @@ namespace Persistence.Data.Migrations
                 name: "OrderDetail");
 
             migrationBuilder.DropTable(
-                name: "Payment");
-
-            migrationBuilder.DropTable(
                 name: "ProductSupplier");
 
             migrationBuilder.DropTable(
@@ -789,9 +771,6 @@ namespace Persistence.Data.Migrations
                 name: "Order");
 
             migrationBuilder.DropTable(
-                name: "PaymentForm");
-
-            migrationBuilder.DropTable(
                 name: "Product");
 
             migrationBuilder.DropTable(
@@ -801,10 +780,10 @@ namespace Persistence.Data.Migrations
                 name: "rol");
 
             migrationBuilder.DropTable(
-                name: "Boss");
+                name: "user");
 
             migrationBuilder.DropTable(
-                name: "user");
+                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "ProductGamma");
@@ -817,6 +796,9 @@ namespace Persistence.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "phone");
+
+            migrationBuilder.DropTable(
+                name: "PaymentForm");
 
             migrationBuilder.DropTable(
                 name: "city");
