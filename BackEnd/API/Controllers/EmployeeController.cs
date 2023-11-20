@@ -49,6 +49,15 @@ namespace API.Controllers
             return _mapper.Map<EmployeeDto>(Employeees);
         }
 
+        // Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas
+        [HttpGet("EmployeeNotSalesRepresentative")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IEnumerable<Employee>> GetEmployeeNotSalesRepresentative()
+        {
+            return await _unitOfWork.Employees.GetEmployeeNotSalesRepresentative();
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

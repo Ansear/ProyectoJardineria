@@ -9,5 +9,6 @@ namespace Domain.Interfaces
     public interface IEmployee : IGenericRepositoryVarchar<Employee>
     {
         Task<IEnumerable<Employee>> GetEmployeesByIdBoss(string id);
+        Task<IEnumerable<Employee>> GetEmployeeNotSalesRepresentative();
     }
 }
