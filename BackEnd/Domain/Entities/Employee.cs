@@ -15,7 +15,7 @@ namespace Domain.Entities
         public int IdUser { get; set; }
         public User User { get; set; }
         public string IdBoss { get; set; }
-        public Boss Boss { get; set; }
+        public ICollection<Employee> Boss { get; set; }
         public ICollection<OrderCustomerEmployee> OrderCustomerEmployees { get; set; }
         public ICollection<OfficeEmployee> OfficeEmployee { get; set; }
     }

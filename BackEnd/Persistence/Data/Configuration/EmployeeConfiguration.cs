@@ -32,7 +32,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                         .IsRequired();
 
                 builder.HasOne(p => p.Boss)
-                    .WithMany(p => p.Employees)
+                    .WithMany()
                     .HasForeignKey(p => p.IdBoss);
         
         builder.HasOne(u => u.User).WithOne(c => c.Employee).HasForeignKey<Employee>(c => c.IdUser)

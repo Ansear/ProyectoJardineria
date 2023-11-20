@@ -22,7 +22,6 @@ public class GardenContext : DbContext
     public DbSet<Phone> Phones { get; set; }
     public DbSet<Employee> Employees { get; set; }
     public DbSet<TypePerson> TypePersons { get; set; }
-    public DbSet<Boss> Bosses { get; set; }
     public DbSet<OfficeEmployee> OfficeEmployees { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Customer> Customers { get; set; }

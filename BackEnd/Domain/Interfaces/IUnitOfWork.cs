@@ -7,7 +7,6 @@ namespace Domain.Interfaces
 {
     public interface IUnitOfWork
     {
-        IBoss Bosses { get; }
         ICustomer Customers { get; }
         IEmployee Employees { get; }
         IOfficeEmployee OfficeEmployees { get; }
