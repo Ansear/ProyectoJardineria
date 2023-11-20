@@ -33,7 +33,7 @@ public class UserService : IUserService
         };
         user.Password = _passwordHasher.HashPassword(user, registerDto.Password); //Encrypt password
         var existingUser = _unitOfWork.Users
-                            .Find(u => u.Username.ToLower() == registerDto.Username.ToLower())
+                            .Find(u => u.Username.ToLower() == registerDto.Username.ToLower() || u.Email.ToLower() == registerDto.Email.ToLower())
                             .FirstOrDefault();
         if (existingUser == null)
         {
@@ -64,7 +64,7 @@ public class UserService : IUserService
         }
         else
         {
-            return $"User {registerDto.Username} already registered.";
+            return $"This User has already been registered.";
         }
     }
 
