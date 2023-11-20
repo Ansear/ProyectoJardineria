@@ -109,5 +109,14 @@ namespace API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+
+        [HttpGet("GetByBossId/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetByBossId(string id)
+        {
+            var result = await _unitOfWork.Employees.GetEmployeesByIdBoss(id);
+            return Ok(result);
+        }
     }
 }
