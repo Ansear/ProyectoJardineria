@@ -42,6 +42,15 @@ module.exports = {
     index: "./src/js/index.js",
     signup: "./src/js/signup.js",
     signin: "./src/js/signin.js",
+    alerts: "./src/js/index.js",
+    buttons: "./src/js/index.js",
+    chart: "./src/js/index.js",
+    settings: "./src/js/index.js",
+    profile: "./src/js/index.js",
+    tables: "./src/js/index.js",
+    "calendar": "./src/js/index.js",
+    "form-elements": "./src/js/index.js",
+    "form-layout": "./src/js/index.js",
   },
   devServer: {
     static: {
