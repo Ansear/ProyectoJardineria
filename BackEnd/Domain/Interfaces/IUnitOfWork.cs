@@ -26,6 +26,7 @@ namespace Domain.Interfaces
         IProductGamma ProductGammas { get; }
         IRol Rols { get; }
         IUser Users { get; }
+        IStatusOrder StatusOrder { get; }
         Task<int> SaveAsync();
     }
 }

@@ -95,6 +95,21 @@ namespace Persistence.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "StatusOrder",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StatusOrder", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "TypePerson",
                 columns: table => new
                 {
@@ -318,8 +333,7 @@ namespace Persistence.Data.Migrations
                     OrderDate = table.Column<DateTime>(type: "DateTime", nullable: false),
                     ExpectedDate = table.Column<DateTime>(type: "DateTime", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    OrderStatus = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IdStatus = table.Column<int>(type: "int", nullable: false),
                     OrderComments = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IdPayment = table.Column<int>(type: "int", nullable: false),
@@ -332,6 +346,12 @@ namespace Persistence.Data.Migrations
                         name: "FK_Order_Payment_IdPayment",
                         column: x => x.IdPayment,
                         principalTable: "Payment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Order_StatusOrder_IdStatus",
+                        column: x => x.IdStatus,
+                        principalTable: "StatusOrder",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -672,6 +692,12 @@ namespace Persistence.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Order_IdStatus",
+                table: "Order",
+                column: "IdStatus",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderCustomerEmployee_IdCustomer",
                 table: "OrderCustomerEmployee",
                 column: "IdCustomer");
@@ -784,6 +810,9 @@ namespace Persistence.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Payment");
+
+            migrationBuilder.DropTable(
+                name: "StatusOrder");
 
             migrationBuilder.DropTable(
                 name: "ProductGamma");

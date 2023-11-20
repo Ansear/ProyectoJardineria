@@ -7,17 +7,21 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 
 namespace API.Controllers;
 public class OfficeController : BaseController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly GardenContext _context;
 
-    public OfficeController(IUnitOfWork unitOfWork, IMapper mapper)
+    public OfficeController(IUnitOfWork unitOfWork, IMapper mapper,GardenContext context)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _context = context;
     }
 
     [HttpGet]
@@ -27,6 +31,23 @@ public class OfficeController : BaseController
     {
         var result = await _unitOfWork.Offices.GetAllAsync();
         return _mapper.Map<List<OfficeDto>>(result);
+    }
+
+    [HttpGet("OfficeCity")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> GetOfficeCity()
+    {
+        
+        var result = await _context.Offices.Include(o => o.Address)
+        .Where(o => o.Address != null && o.Address.Cities != null)
+        .Select(office => new
+        {
+            CodeOfOffice = office.Id,
+            City = office.Address.Cities.Name
+        })
+        .ToListAsync();
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

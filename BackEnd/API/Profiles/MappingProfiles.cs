@@ -23,5 +23,6 @@ public class MappingProfiles : Profile
         CreateMap<PaymentForm, PaymentFormDto>().ReverseMap();
         CreateMap<Product, ProductDto>().ReverseMap();
         CreateMap<ProductGamma, ProductGammaDto>().ReverseMap();
+        CreateMap<StatusOrder, StatusOrderDto>().ReverseMap();
     }
 }

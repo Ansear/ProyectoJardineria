@@ -260,6 +260,18 @@ namespace APP.UnitOfWork
                 return _rol;
             }
         }
+        private OrderStatusRepository _orderStatus; 
+        public IStatusOrder StatusOrder
+        {
+            get
+            {
+                if (_orderStatus == null)
+                {
+                    _orderStatus = new OrderStatusRepository(_context);
+                }
+                return _orderStatus;
+            }
+        }
 
         public void Dispose()
         {
