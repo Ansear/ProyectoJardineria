@@ -17,5 +17,9 @@ namespace APP.Repository
             _context = context;
         }
 
+        // public async Task<IEnumerable<Customer>> GetCustomerWithPaymentIn2008()
+        // {
+        //     // return await _context.Customers.Where(x => x.Payments.Any(y => y.PaymentDate.Year == 2008)).ToListAsync();
+        // }
     }
 }

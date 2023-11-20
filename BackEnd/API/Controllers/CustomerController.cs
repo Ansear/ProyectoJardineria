@@ -49,6 +49,19 @@ namespace API.Controllers
             return _mapper.Map<CustomerDto>(customer);
         }
 
+        // Devuelve un listado con el código de cliente de aquellos clientes que realizaron algún pago en 2008. Tenga en cuenta que deberá eliminar aquellos códigos de cliente que aparezcan repetidos.Resuelva la consulta:
+        // • Utilizando la función YEAR de MySQL.
+        // • Utilizando la función DATE_FORMAT de MySQL.
+        // • Sin utilizar ninguna de las funciones anteriores.
+
+        // [HttpGet("CustomerWithPaymentIn2008")]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(StatusCodes.Status400BadRequest)] 
+        // public async Task<IEnumerable<Customer>> GetCustomerWithPaymentIn2008()
+        // {
+        //     return await _unitOfWork.Customers.GetCustomerWithPaymentIn2008();
+        // }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
