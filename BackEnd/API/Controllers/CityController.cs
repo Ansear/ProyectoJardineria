@@ -7,17 +7,20 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Data;
 
 namespace API.Controllers;
 public class CityController : BaseController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly GardenContext _context;
 
-    public CityController(IUnitOfWork unitOfWork, IMapper mapper)
+    public CityController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _context = context;
     }
 
     [HttpGet]
@@ -40,6 +43,27 @@ public class CityController : BaseController
             return NotFound();
         return _mapper.Map<CityDto>(result);
     }
+
+    // Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
+    [HttpGet("CityAndPhoneFromOffices/{country}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public Task<IQueryable<CityAndPhoneFromSpain>> GetCityAndPhoneFromSpain(string country)
+    {
+        var result = _context.Cities
+            .Where(x => x.States.Countries.Name == country)
+            .SelectMany(x => x.Address)
+            .SelectMany(address => address.Offices)
+            .Select(office => new CityAndPhoneFromSpain
+            {
+                CityName = office.Address.Cities.Name,
+                Phone = office.Phones.PhoneNumber
+            });
+
+        return Task.FromResult(result);
+    }
+
+
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]

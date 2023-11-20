@@ -11,5 +11,5 @@ public class City : BaseEntityInt
     [Required]
     public int IdState { get; set; }
     public State States { get; set; }
-    public ICollection<Address> Address { get; set; }   
+    public ICollection<Address> Address { get; set; }
 }
