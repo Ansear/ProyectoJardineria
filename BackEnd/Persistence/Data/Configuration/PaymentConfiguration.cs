@@ -8,8 +8,6 @@ namespace Persistence.Data.Configuracion
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            // Aquí puedes configurar las propiedades de la entidad
-            // utilizando el objeto builder
             builder.ToTable("Payment");
 
             builder.HasKey(e => e.Id);
@@ -19,17 +17,9 @@ namespace Persistence.Data.Configuracion
                 .IsRequired()
                 .HasColumnType("DateTime");
 
-            builder.Property(e => e.Total)
-                 .IsRequired()
-                 .HasColumnType("int");
-
             builder.HasOne(p => p.PaymentForm)
                  .WithMany(p => p.Payments)
                  .HasForeignKey(p => p.IdFormPay);
-
-            builder.HasOne(p => p.Order)
-                 .WithOne(p => p.Payments)
-                 .HasForeignKey<Payment>(p => p.IdOrder);
         }
     }
 }
