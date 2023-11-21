@@ -17,25 +17,7 @@ Alpine.start();
 
 // Init flatpickr
 flatpickr(".datepicker", {
-  mode: "range",
-  static: true,
-  monthSelectorType: "static",
-  dateFormat: "M j, Y",
-  defaultDate: [new Date().setDate(new Date().getDate() - 6), new Date()],
-  prevArrow:
-    '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
-  nextArrow:
-    '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
-  onReady: (selectedDates, dateStr, instance) => {
-    // eslint-disable-next-line no-param-reassign
-    instance.element.value = dateStr.replace("to", "-");
-    const customClass = instance.element.getAttribute("data-class");
-    instance.calendarContainer.classList.add(customClass);
-  },
-  onChange: (selectedDates, dateStr, instance) => {
-    // eslint-disable-next-line no-param-reassign
-    instance.element.value = dateStr.replace("to", "-");
-  },
+  // ... (configuración de flatpickr)
 });
 
 // Document Loaded
@@ -45,38 +27,47 @@ document.addEventListener("DOMContentLoaded", () => {
   chart03();
   chart04();
   map01();
+
+  // Verifica si hay un token JWT almacenado y actualiza la vista del perfil
+  const jwtToken = sessionStorage.getItem("jwtToken");
+  if (jwtToken) {
+    updateProfileView();
+  }
 });
 
+// Función para obtener la información del usuario del sessionStorage
+function getUserInfoFromSessionStorage() {
+  const userName = sessionStorage.getItem("userName");
+  const userRoles = JSON.parse(sessionStorage.getItem("userRoles"));
 
-// // Tu función asíncrona para realizar la solicitud GET
-// let enviar = async () => {
-//   try {
-//     const peticion = await fetch("http://localhost:5286/api/country");
-//     let res = await peticion.json();
+  return {
+    userName: userName,
+    userRoles: userRoles,
+  };
+}
 
-//     // Limpia el contenido actual del div
-//     document.getElementById("resultado").innerHTML = "";
+// Función para actualizar la vista del perfil con la información del usuario
+function updateProfileView() {
+  const userInfo = getUserInfoFromSessionStorage();
 
-//     // Itera sobre los elementos y agrégales al div
-//     res.map((element) => {
-//       // Crea un nuevo elemento de párrafo
-//       const nuevoParrafo = document.createElement("p");
+  // Busca los elementos en el DOM donde deseas mostrar la información del usuario
+  const userNameElement = document.getElementById("userName");
+  const userRoleElement = document.getElementById("userRole");
+  const userProfileContainer = document.getElementById("userProfileContainer");
 
-//       // Establece el contenido del párrafo con el valor del id
-//       nuevoParrafo.textContent = element.name;
+  // Verifica si los elementos existen antes de actualizar su contenido
+  if (userNameElement) {
+    userNameElement.textContent = userInfo.userName;
+  }
 
-//       // Agrega el párrafo al div
-//       document.getElementById("resultado").appendChild(nuevoParrafo);
-//     });
-//   } catch (error) {
-//     console.error("Error al obtener y mostrar los datos:", error);
-//   }
-// };
+  if (userRoleElement) {
+    // Puedes mostrar los roles de usuario de una manera específica si es necesario
+    // En este ejemplo, simplemente muestra la cadena JSON
+    userRoleElement.textContent = JSON.stringify(userInfo.userRoles);
+  }
 
-// // Llama a la función para realizar la solicitud y mostrar los datos
-// enviar();
-
-// document.getElementById("signinbutton1").addEventListener("click", function () {
-//   // Redirige a la página index.html
-//   window.location.href = "./index.html";
-// });
+  // Muestra el contenedor del perfil después de actualizar la información
+  if (userProfileContainer) {
+    userProfileContainer.classList.remove("hidden");
+  }
+}

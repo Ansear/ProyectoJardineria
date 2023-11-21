@@ -74,6 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Redirige a la página de inicio después de iniciar sesión
           window.location.href = "index.html";
+
+          // Llama a la función para actualizar la vista del perfil en profile.js
+          updateProfileView();
         } else {
           console.error("Error de autenticación:", data.message);
         }
