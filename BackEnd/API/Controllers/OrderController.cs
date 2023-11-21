@@ -232,9 +232,8 @@ namespace API.Controllers
                .GroupBy(p => p.IdFormPay)
                .OrderByDescending(group => group.Count())
                .Select(group => group.Key)
-               .FirstOrDefaultAsync();  // Utilizar el método asincrónico específico de EF Core
+               .FirstOrDefaultAsync();  
 
-            // Aquí deberías obtener el nombre del método de pago basándote en su IdFormPay
             var result = await _context.PaymentForms
                 .Where(pf => pf.Id == mostUsedPaymentMethod)
                 .Select(pf => pf.PaymentFormName)
