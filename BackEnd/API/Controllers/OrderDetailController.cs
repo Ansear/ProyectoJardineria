@@ -8,6 +8,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 namespace API.Controllers
@@ -134,6 +135,35 @@ namespace API.Controllers
             }
 
             return Ok(top20BestSellingProducts);
+        }
+
+        [HttpGet("TotalBilling")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<object>> GetTotalBillingAsync()
+        {
+            var result = await _context.OrderDetails
+                .Include(od => od.Product)
+                .GroupBy(od => od.OrderCode)
+                .Select(group => new
+                {
+                    OrderCode = group.Key,
+                    BaseImponible = group.Sum(od => od.UnitPrice * od.Quantity),
+                    IVA = Math.Round((double)(group.Sum(od => od.UnitPrice * od.Quantity) * 0.21m), 2),
+                    TotalFacturado = Math.Round((double)(group.Sum(od => od.UnitPrice * od.Quantity) * 1.21m), 2)
+                })
+                .ToListAsync();
+
+            var totalBilling = new
+            {
+                TotalBaseImponible = Math.Round((double)result.Sum(r => r.BaseImponible), 2),
+                TotalIVA = Math.Round((double)result.Sum(r => r.IVA), 2),
+                TotalFacturado = Math.Round((double)result.Sum(r => r.TotalFacturado), 2)
+            };
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(totalBilling);
         }
     }
 }

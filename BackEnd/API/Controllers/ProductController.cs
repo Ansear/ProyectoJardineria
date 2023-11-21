@@ -8,6 +8,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 namespace API.Controllers
@@ -160,6 +161,95 @@ namespace API.Controllers
             };
 
             return Ok(productDto);
+        }
+
+        [HttpGet("GetProductByGamma&Stock/{idgamma}/{instock}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetDeliveryByMonth(string idgamma, int stock)
+        {
+            var result = await _context.Products
+                                .Where(p => p.Gamma != null && p.Gamma.Id == idgamma && p.InStockQuantity > stock)
+                                .OrderByDescending(p => p.ProductSalesPrice).ToListAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<ProductDto>>(result);
+        }
+
+        [HttpGet("GetProductNeverOrdered")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsNeverOrdered(string idgamma, int stock)
+        {
+            var orderedProductIds = await _context.OrderDetails
+                .Select(od => od.Product.Id) 
+                .Distinct()
+                .ToListAsync();
+
+            var result = _context.Products
+                .Where(p => !orderedProductIds.Contains(p.Id)) 
+                .ToList();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<ProductDto>>(result);
+        }
+
+        [HttpGet("ProductsCountInOrders")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<object>>> GetProductsCountInOrders()
+        {
+            var result = await _context.OrderDetails
+                .GroupBy(od => od.OrderCode)
+                .Select(group => new
+                {
+                    OrderCode = group.Key,
+                    ProductCount = group.Select(od => od.ProductCode).Distinct().Count()
+                })
+                .ToListAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("MostExpensiveProduct")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<string>> GetMostExpensiveProductAsync()
+        {
+            var mostExpensiveProduct = await _context.Products
+                .OrderByDescending(p => p.ProductSalesPrice)
+                .FirstOrDefaultAsync();
+
+            if (mostExpensiveProduct == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mostExpensiveProduct.ProductName);
+        }
+
+        [HttpGet("ProductWithMostStock")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProductDto>> GetProductWithMostStockAsync()
+        {
+            var productWithMostStock = await _context.Products
+                .OrderByDescending(p => p.InStockQuantity)
+                .FirstOrDefaultAsync();
+
+            if (productWithMostStock == null)
+            {
+                return NotFound();
+            }
+
+            return _mapper.Map<ProductDto>(productWithMostStock);
         }
     }
 }
