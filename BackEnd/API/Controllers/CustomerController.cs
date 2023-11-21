@@ -122,7 +122,7 @@ namespace API.Controllers
                             .FirstOrDefault(),
                         OfficeCity = _context.OfficeEmployees
                             .Where(oe => oe.IdEmployee == customer.OrderCustomerEmployees.First().IdEmployee)
-                            .Select(oe => oe.Office.Address.Cities.Name) // Accediendo a la propiedad Name de City
+                            .Select(oe => oe.Office.Address.Cities.Name)
                             .FirstOrDefault()
                     })
                     .ToListAsync();
@@ -152,7 +152,7 @@ namespace API.Controllers
                 var productRangesByCustomer = await _context.Customers
                     .SelectMany(customer => customer.OrderCustomerEmployees
                         .SelectMany(oce => oce.Order.OrderDetails
-                            .Select(od => od.Product.Gamma.TextDescription) // Accede a la propiedad TextDescription de ProductGamma
+                            .Select(od => od.Product.Gamma.TextDescription)
                             .Distinct()
                             .Select(productRange => new CustomerProductRange
                             {
@@ -346,7 +346,7 @@ namespace API.Controllers
             var result = await _context.OrderCustomerEmployees
                 .Where(oce => oce.Order.DeliveryDate > oce.Order.ExpectedDate)
                 .Select(oce => oce.Customer.CustomerName + " " + oce.Customer.CustomerLastName)
-                .Distinct() // Elimina duplicados
+                .Distinct() 
                 .ToListAsync();
             if (result == null)
             {

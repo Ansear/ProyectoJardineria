@@ -44,7 +44,6 @@ public class CityController : BaseController
         return _mapper.Map<CityDto>(result);
     }
 
-    // Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
     [HttpGet("CityAndPhoneFromOffices/{country}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
