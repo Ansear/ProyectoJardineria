@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Persistence.Data.Migrations
+namespace Persistence.data.migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

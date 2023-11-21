@@ -273,7 +273,7 @@ VALUES
 
 INSERT INTO `employee` (`Id`, `EmployeeName`, `EmployeeLastName`, `Extension`, `EmployeeEmail`, `EmployeePosition`,`IdUser`,`IdBoss`)
 VALUES
-('B1', 'Loki', 'Odinson', '1234', 'lokielmejor@email.com', 'Aquel que Permanece',51,'B1'),
+('B1', 'Alberto', 'Soria', '1234', 'lokielmejor@email.com', 'Aquel que Permanece',51,'B1'),
 ('EB1', 'Santiago', 'Gonzalez', '1234', 'santiagowhite@email.com', 'Software Engineer',48,'B1'),
 ('EB2', 'Santiago', 'De La Cruz', '1234', 'santiagoblack@email.com', 'Software Engineer',49,'B1'),
 ('EB3', 'Sebastian', 'Arciniegas', '1234', 'sebastianpro@email.com', 'Software Engineer',50,'B1'),
@@ -307,7 +307,8 @@ VALUES
 ('E10004', 'O10004'),
 ('E10005', 'O10005'),
 ('E10006', 'O10006'),
-('E10007', 'O10007');
+('E10007', 'O10007'),
+('EB3', 'O10007');
 
 INSERT INTO `customer` (`CustomerName`, `CustomerLastName`, `CustomerPhoneId`, `CustomerFax`, `AddressId`, `CreditLimit`, `TypePersonId`,`IdUser`) 
 VALUES
@@ -457,13 +458,13 @@ VALUES
 ('2023-11-21 01:30:00', 'P3'),
 ('2023-11-22 03:45:00', 'P1'),
 ('2023-11-23 06:00:00', 'P2'),
-('2023-11-24 08:15:00', 'P3'),
+('2008-11-24 08:15:00', 'P3'),
 ('2023-11-25 10:30:00', 'P1'),
 ('2023-11-26 12:45:00', 'P2'),
 ('2023-11-27 15:00:00', 'P3'),
 ('2023-11-28 17:15:00', 'P1'),
 ('2023-11-29 19:30:00', 'P2'),
-('2023-11-30 21:45:00', 'P3');
+('2008-11-30 21:45:00', 'P3');
 
 INSERT INTO `statusorder` (`Description`)
 VALUES
@@ -619,5 +620,5 @@ VALUES
 (19,19,'E10007'),
 (20,20,'E10004'),
 (21,21,'E10007'),
-(30,22,'E10002');
+(30,22,'11');
 ```

@@ -14,15 +14,20 @@ public class MappingProfiles : Profile
         CreateMap<Address, AddressDto>().ReverseMap();
         CreateMap<City, CityDto>().ReverseMap();
         CreateMap<Country, CountryDto>().ReverseMap();
-        CreateMap<State, StateDto>().ReverseMap();
+        CreateMap<Customer, CustomerDto>().ReverseMap();
+        CreateMap<Employee, EmployeeDto>().ReverseMap();
         CreateMap<Office, OfficeDto>().ReverseMap();
-        CreateMap<Phone, PhoneDto>().ReverseMap();
-        CreateMap<Order, OrderDto>().ReverseMap();
+        CreateMap<OfficeEmployee, OfficeEmployeeDto>().ReverseMap();
         CreateMap<OrderDetail, OrderDetailDto>().ReverseMap();
+        CreateMap<Order, OrderDto>().ReverseMap();
         CreateMap<Payment, PaymentDto>().ReverseMap();
         CreateMap<PaymentForm, PaymentFormDto>().ReverseMap();
+        CreateMap<Phone, PhoneDto>().ReverseMap();
         CreateMap<Product, ProductDto>().ReverseMap();
         CreateMap<ProductGamma, ProductGammaDto>().ReverseMap();
+        CreateMap<State, StateDto>().ReverseMap();
         CreateMap<StatusOrder, StatusOrderDto>().ReverseMap();
+        CreateMap<Supplier, SupplierDto>().ReverseMap();
+        CreateMap<TypePerson, TypePersonDto>().ReverseMap();
     }
 }

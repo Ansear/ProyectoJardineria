@@ -7,7 +7,7 @@ using Persistence.Data;
 
 #nullable disable
 
-namespace Persistence.Data.Migrations
+namespace Persistence.data.migrations
 {
     [DbContext(typeof(GardenContext))]
     partial class GardenContextModelSnapshot : ModelSnapshot

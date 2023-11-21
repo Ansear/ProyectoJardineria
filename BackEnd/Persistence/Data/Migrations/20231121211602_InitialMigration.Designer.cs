@@ -8,10 +8,10 @@ using Persistence.Data;
 
 #nullable disable
 
-namespace Persistence.Data.Migrations
+namespace Persistence.data.migrations
 {
     [DbContext(typeof(GardenContext))]
-    [Migration("20231120195752_InitialMigration")]
+    [Migration("20231121211602_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
