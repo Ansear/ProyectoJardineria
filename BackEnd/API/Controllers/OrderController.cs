@@ -137,10 +137,38 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetDeliveryByMonth(int month)
         {
             var result = await _context.Orders.Where(e => e.DeliveryDate.Month == month).ToListAsync();
-            if (result == null){
+            if (result == null)
+            {
                 return NotFound();
             }
             return _mapper.Map<List<OrderDto>>(result);
         }
+
+        [HttpGet("GetMostMethodPayment/{year}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersWithLateDelivering(int year)
+        {
+            var mostUsedPaymentMethod = await _context.Payments
+               .Where(p => p.PaymentDate.Year == year)
+               .GroupBy(p => p.IdFormPay)
+               .OrderByDescending(group => group.Count())
+               .Select(group => group.Key)
+               .FirstOrDefaultAsync();  // Utilizar el método asincrónico específico de EF Core
+
+            // Aquí deberías obtener el nombre del método de pago basándote en su IdFormPay
+            var result = await _context.PaymentForms
+                .Where(pf => pf.Id == mostUsedPaymentMethod)
+                .Select(pf => pf.PaymentFormName)
+                .FirstOrDefaultAsync();
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
     }
 }

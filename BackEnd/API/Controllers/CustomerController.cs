@@ -184,13 +184,22 @@ namespace API.Controllers
         {
             var result = await _context.OrderCustomerEmployees
                 .Where(oce => oce.Order.DeliveryDate > oce.Order.ExpectedDate)
-                .Select(oce => oce.Customer.CustomerName + " " + oce.Customer.CustomerLastName) 
+                .Select(oce => oce.Customer.CustomerName + " " + oce.Customer.CustomerLastName)
                 .Distinct() // Elimina duplicados
                 .ToListAsync();
             if (result == null)
             {
                 return NotFound();
             }
+            return Ok(result);
+        }
+
+        [HttpGet("GetAllCountCustomer")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<int>> GetCustomersCount()
+        {
+            var result = await _context.Customers.CountAsync();
             return Ok(result);
         }
 

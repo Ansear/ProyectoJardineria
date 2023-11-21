@@ -117,6 +117,9 @@ namespace API.Controllers
         public async Task<ActionResult<IEnumerable<Employee>>> GetByBossId(string id)
         {
             var result = await _unitOfWork.Employees.GetEmployeesByIdBoss(id);
+            if(result == null){
+                return NotFound();
+            }
             return Ok(result);
         }
         [HttpGet("ceo")]
@@ -125,7 +128,7 @@ namespace API.Controllers
         public async Task<ActionResult> GetCeo()
         {
             var ceo = await _context.Employees
-                .Where(e => e.Id == e.IdBoss) 
+                .Where(e => e.Id == e.IdBoss)
                 .Select(e => new
                 {
                     Position = e.EmployeePosition,
@@ -142,5 +145,37 @@ namespace API.Controllers
 
             return Ok(ceo);
         }
+
+        [HttpGet("GetEmployeeWithCustomerCount")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeeWithCustomerCount()
+        {
+            var result = await _context.Employees
+            .Join(
+                _context.OrderCustomerEmployees,
+                employee => employee.Id,
+                orderCustomerEmployee => orderCustomerEmployee.IdEmployee,
+                (employee, orderCustomerEmployee) => new { Employee = employee, OrderCustomerEmployee = orderCustomerEmployee }
+            )
+            .Join(
+                _context.Customers,
+                combined => combined.OrderCustomerEmployee.IdCustomer,
+                customer => customer.Id,
+                (combined, customer) => new { Employee = combined.Employee, Customer = customer }
+            )
+            .GroupBy(combined => new { combined.Employee.Id, combined.Employee.EmployeeName, combined.Employee.EmployeeLastName })
+            .Select(group => new
+            {
+                SalesRepresentativeName = $"{group.Key.EmployeeName} {group.Key.EmployeeLastName}",
+                CustomerCount = group.Count()
+            })
+            .ToListAsync();
+            if(result == null){
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
     }
 }
