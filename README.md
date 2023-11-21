@@ -283,7 +283,8 @@ VALUES
 ('E10004', 'Mary', 'Williams', '4567', 'marywilliams@email.com', 'Marketing Manager',4,'EB1'),
 ('E10005', 'David', 'Brown', '5678', 'davidbrown@email.com', 'Sales Representative',5,'EB2'),
 ('E10006', 'Susan', 'Miller', '6789', 'susanmiller@email.com', 'Accountant',6,'EB3'),
-('E10007', 'Michael', 'Garcia', '7890', 'michaelgarcia@email.com', 'Human Resources Specialist',7,'EB1');
+('E10007', 'Michael', 'Garcia', '7890', 'michaelgarcia@email.com', 'Human Resources Specialist',7,'EB1'),
+('11', 'Juancho', 'Rois', '7890', 'jauncho@email.com', 'Human Resources Specialist',15,'EB1');
 
 INSERT INTO `office` (`Id`, `IdPhone`, `IdAddress`)
 VALUES
@@ -331,7 +332,7 @@ VALUES
 ('Quinn', 'Fisher', 19, '43101', 19, 10000.00, 1,26),
 ('Rachel', 'Hall', 20, '769173', 20, 10500.25, 2,27),
 ('Samuel', 'Lee', 21, '674741', 21, 11000.50, 1,28),
-('Tina', 'Williams', 22, '797829', 22, 11500.75, 2,29),
+('Tina', 'Williams', 22, '797829', 24, 11500.75, 2,29),
 ('Ulysses', 'Young', 23, '356413', 23, 12000.00, 1,30),
 ('Vera', 'Taylor', 24, '431694', 12, 12500.25, 2,31),
 ('William', 'Moore', 25, '366081', 15, 13000.50, 1,32),
@@ -501,7 +502,7 @@ INSERT INTO `order` (`OrderDate`, `ExpectedDate`, `DeliveryDate`, `IdStatus`, `O
 ('2023-11-27 15:00:00', '2023-12-27 17:15:00', '2023-12-28 19:45:00', 3, 'Gift receipt included.',27,230),
 ('2023-11-28 17:15:00', '2023-12-29 19:30:00', '2023-12-30 22:00:00', 4, 'Delivery date changed to next week.',28,120),
 ('2023-11-29 19:30:00', '2023-12-31 21:45:00', '2024-01-01 00:15:00', 2, 'Delivery instructions: Call before arrival.',29,300),
-('2023-11-30 21:45:00', '2024-01-02 00:00:00', '2024-01-01 02:30:00', 3, 'Gift wrapping available upon request.',30,100);
+('2008-11-30 21:45:00', '2008-01-02 00:00:00', '2008-01-01 02:30:00', 3, 'Gift wrapping available upon request.',30,100);
 
 INSERT INTO `orderdetail` (`ProductCode`, `OrderCode`, `Quantity`, `UnitPrice`, `LineNumber`) VALUES
 ('P001', 1, 2, 50, 'Line 1'),
@@ -618,5 +619,5 @@ VALUES
 (19,19,'E10007'),
 (20,20,'E10004'),
 (21,21,'E10007'),
-(22,22,'E10002');
+(30,22,'E10002');
 ```
