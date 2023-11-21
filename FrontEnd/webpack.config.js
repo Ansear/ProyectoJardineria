@@ -46,7 +46,7 @@ module.exports = {
     buttons: "./src/js/index.js",
     chart: "./src/js/index.js",
     settings: "./src/js/index.js",
-    profile: "./src/js/index.js",
+    profile: "./src/js/profile.js",
     tables: "./src/js/tables.js",
     "calendar": "./src/js/index.js",
     "form-elements": "./src/js/index.js",

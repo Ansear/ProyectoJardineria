@@ -4,6 +4,31 @@
     Top Channels
   </h4>
 
+  <!-- Primera lista desplegable (Categoría) -->
+  <div class="mb-4">
+    <label for="categorySelector" class="block text-sm font-medium text-gray-700">Selecciona una categoría:</label>
+    <select id="categorySelector" name="categorySelector" class="mt-1 p-2 border rounded-md">
+      <option value="city">City</option>
+      <option value="customer">Customer</option>
+      <option value="employee">Employee</option>
+      <option value="office">Office</option>
+      <option value="order">Order</option>
+      <option value="payment">Payment</option>
+    </select>
+  </div>
+
+  <!-- Segunda lista desplegable (Consulta) -->
+  <div class="mb-4">
+    <label for="querySelector" class="block text-sm font-medium text-gray-700">Selecciona una consulta:</label>
+    <select id="querySelector" name="querySelector" class="mt-1 p-2 border rounded-md"></select>
+  </div>
+
+  <!-- Input para consultas que requieren valores del usuario -->
+  <div id="userInputContainer" class="mb-4 hidden">
+    <label for="userInput" class="block text-sm font-medium text-gray-700">Ingresa el valor requerido:</label>
+    <input id="userInput" name="userInput" type="text" class="mt-1 p-2 border rounded-md">
+  </div>
+
   <div class="flex flex-col" id="dynamicTable">
     <!-- <div class="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
       <div class="p-2.5 xl:p-5">
