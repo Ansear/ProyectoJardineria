@@ -51,6 +51,65 @@ namespace API.Controllers
             return _mapper.Map<OrderDto>(nombreVariable);
         }
 
+        [HttpGet("RejectedOrdersInYear/{year}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Order>>> GetRejectedOrdersInYear(int year)
+        {
+            try
+            {
+                var rejectedOrders = await _context.Orders
+                    .Where(order => order.DeliveryDate.Year == year && order.StatusOrder.Description == "Rejected")
+                    .ToListAsync();
+
+                if (rejectedOrders.Any())
+                {
+                    return Ok(rejectedOrders);
+                }
+                else
+                {
+                    return BadRequest($"No se encontraron pedidos rechazados en el año {year}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("OrdersCountByStatus")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<OrdersCountByStatusDto>>> GetOrdersCountByStatus()
+        {
+            try
+            {
+                var ordersCountByStatus = await _context.Orders
+                    .GroupBy(order => order.StatusOrder.Description)
+                    .Select(group => new OrdersCountByStatusDto
+                    {
+                        Status = group.Key,
+                        OrdersCount = group.Count()
+                    })
+                    .OrderByDescending(result => result.OrdersCount)
+                    .ToListAsync();
+
+                if (ordersCountByStatus.Any())
+                {
+                    return Ok(ordersCountByStatus);
+                }
+                else
+                {
+                    return BadRequest("No se encontraron datos de cantidad de pedidos por estado.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -20,7 +20,12 @@ namespace APP.Repository
 
         public async Task<IEnumerable<Employee>> GetEmployeesByIdBoss(string id)
         {
-            return await _context.Employees.Where(e => e.IdBoss == id).ToListAsync();;
+            return await _context.Employees.Where(e => e.IdBoss == id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Employee>> GetEmployeeNotSalesRepresentative()
+        {
+            return await _context.Employees.Where(x => x.EmployeePosition != "Sales Representative").ToListAsync();
         }
     }
 }

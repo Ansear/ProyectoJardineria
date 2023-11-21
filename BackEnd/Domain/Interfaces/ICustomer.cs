@@ -9,5 +9,6 @@ namespace Domain.Interfaces
     public interface ICustomer : IGenericRepositoryInt<Customer>
     {
         Task<IEnumerable<Customer>> GetCustomerByCountry(string countryName);
+        Task<IEnumerable<Customer>> GetCustomersWithPaymentsInYear(int year);
     }
 }

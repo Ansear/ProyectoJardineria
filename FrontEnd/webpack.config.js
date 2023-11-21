@@ -31,6 +31,7 @@ const generateHTMLPlugins = () =>
       filename,
       template: `./src/${filename}`,
       favicon: `./src/images/favicon.ico`,
+      chunks: [filename.split('.')[0]],
       inject: "body",
     });
   });
@@ -38,7 +39,18 @@ const generateHTMLPlugins = () =>
 module.exports = {
   mode: "development",
   entry: {
-    main: "./src/js/index.js",
+    index: "./src/js/index.js",
+    signup: "./src/js/signup.js",
+    signin: "./src/js/signin.js",
+    alerts: "./src/js/index.js",
+    buttons: "./src/js/index.js",
+    chart: "./src/js/index.js",
+    settings: "./src/js/index.js",
+    profile: "./src/js/index.js",
+    tables: "./src/js/tables.js",
+    "calendar": "./src/js/index.js",
+    "form-elements": "./src/js/index.js",
+    "form-layout": "./src/js/index.js",
   },
   devServer: {
     static: {
@@ -116,7 +128,7 @@ module.exports = {
     }),
   ],
   output: {
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
     clean: true,
     assetModuleFilename: "[path][name][ext]",

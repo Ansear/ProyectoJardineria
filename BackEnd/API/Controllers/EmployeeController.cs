@@ -50,6 +50,121 @@ namespace API.Controllers
             return _mapper.Map<EmployeeDto>(Employeees);
         }
 
+        // Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas
+        [HttpGet("EmployeeNotSalesRepresentative")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IEnumerable<Employee>> GetEmployeeNotSalesRepresentative()
+        {
+            return await _unitOfWork.Employees.GetEmployeeNotSalesRepresentative();
+        }
+
+        [HttpGet("EmployeesWithManagers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<EmployeeWithManager>>> GetEmployeesWithManagers()
+        {
+            try
+            {
+                var employeesWithManagers = await _context.Employees
+                    .Include(employee => employee.Boss)
+                    .Select(employee => new EmployeeWithManager
+                    {
+                        EmployeeName = $"{employee.EmployeeName} {employee.EmployeeLastName}",
+                        ManagerName = employee.Boss != null
+                            ? $"{employee.Boss.EmployeeName} {employee.Boss.EmployeeLastName}"
+                            : "Sin Jefe"
+                    })
+                    .ToListAsync();
+
+                if (employeesWithManagers.Any())
+                {
+                    return Ok(employeesWithManagers);
+                }
+                else
+                {
+                    return BadRequest("No se encontraron empleados con jefes.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("EmployeesWithoutOffice")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesWithoutOffice()
+        {
+            try
+            {
+                var employeesWithoutOffice = await _context.Employees
+                    .Where(employee => employee.OfficeEmployee == null || !employee.OfficeEmployee.Any())
+                    .ToListAsync();
+
+                if (employeesWithoutOffice.Any())
+                {
+                    return Ok(employeesWithoutOffice);
+                }
+                else
+                {
+                    return BadRequest("No se encontraron empleados sin oficina asociada.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("EmployeesWithoutOfficeAndClients")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployeesWithoutOfficeAndClients()
+        {
+            try
+            {
+                var employeesWithoutOfficeAndClients = await _context.Employees
+                    .Where(employee =>
+                        (employee.OfficeEmployee == null || !employee.OfficeEmployee.Any()) &&
+                        (employee.OrderCustomerEmployees == null || !employee.OrderCustomerEmployees.Any())
+                    )
+                    .ToListAsync();
+
+                if (employeesWithoutOfficeAndClients.Any())
+                {
+                    return Ok(employeesWithoutOfficeAndClients);
+                }
+                else
+                {
+                    return BadRequest("No se encontraron empleados sin oficina ni clientes asociados.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("TotalEmployees")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<int>> GetTotalEmployees()
+        {
+            try
+            {
+                var totalEmployees = await _context.Employees.CountAsync();
+
+                return Ok(totalEmployees);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
