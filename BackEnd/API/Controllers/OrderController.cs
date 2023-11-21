@@ -8,6 +8,8 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 
 namespace API.Controllers
 {
@@ -15,11 +17,13 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public OrderController(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -46,6 +50,65 @@ namespace API.Controllers
 
             return _mapper.Map<OrderDto>(nombreVariable);
         }
+
+        [HttpGet("RejectedOrdersInYear/{year}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Order>>> GetRejectedOrdersInYear(int year)
+        {
+            try
+            {
+                var rejectedOrders = await _context.Orders
+                    .Where(order => order.DeliveryDate.Year == year && order.StatusOrder.Description == "Rejected")
+                    .ToListAsync();
+
+                if (rejectedOrders.Any())
+                {
+                    return Ok(rejectedOrders);
+                }
+                else
+                {
+                    return BadRequest($"No se encontraron pedidos rechazados en el año {year}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpGet("OrdersCountByStatus")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<OrdersCountByStatusDto>>> GetOrdersCountByStatus()
+        {
+            try
+            {
+                var ordersCountByStatus = await _context.Orders
+                    .GroupBy(order => order.StatusOrder.Description)
+                    .Select(group => new OrdersCountByStatusDto
+                    {
+                        Status = group.Key,
+                        OrdersCount = group.Count()
+                    })
+                    .OrderByDescending(result => result.OrdersCount)
+                    .ToListAsync();
+
+                if (ordersCountByStatus.Any())
+                {
+                    return Ok(ordersCountByStatus);
+                }
+                else
+                {
+                    return BadRequest("No se encontraron datos de cantidad de pedidos por estado.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -75,12 +138,12 @@ namespace API.Controllers
                 OrderDto.Id = id;
             }
 
-            if(OrderDto.Id != id)
+            if (OrderDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(OrderDto == null)
+            if (OrderDto == null)
             {
                 return NotFound();
             }

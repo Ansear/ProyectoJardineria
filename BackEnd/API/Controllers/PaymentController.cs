@@ -8,18 +8,22 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 
-namespace API.Controllers 
+namespace API.Controllers
 {
     public class PaymentController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public PaymentController(IUnitOfWork unitOfWork, IMapper mapper)
+        public PaymentController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -45,6 +49,33 @@ namespace API.Controllers
             }
 
             return _mapper.Map<PaymentDto>(nombreVariable);
+        }
+
+        [HttpGet("DistinctPaymentForms")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<PaymentForm>>> GetDistinctPaymentForms()
+        {
+            try
+            {
+                var distinctPaymentForms = await _context.Payments
+                    .Select(payment => payment.PaymentForm)
+                    .Distinct()
+                    .ToListAsync();
+
+                if (distinctPaymentForms.Any())
+                {
+                    return Ok(distinctPaymentForms);
+                }
+                else
+                {
+                    return BadRequest("No se encontraron formas de pago distintas en la tabla Payment.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         [HttpPost]
@@ -75,17 +106,17 @@ namespace API.Controllers
                 PaymentDto.Id = id;
             }
 
-            if(PaymentDto.Id != id)
+            if (PaymentDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(PaymentDto == null)
+            if (PaymentDto == null)
             {
                 return NotFound();
             }
 
-             // Por si requiero la fecha actual
+            // Por si requiero la fecha actual
             /*if (PaymentDto.Fecha == DateTime.MinValue)
             {
                 PaymentDto.Fecha = DateTime.Now;

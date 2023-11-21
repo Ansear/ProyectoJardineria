@@ -30,9 +30,22 @@ namespace APP.Repository
                 .ToListAsync();
             return result;
         }
-        // public async Task<IEnumerable<Customer>> GetCustomerWithPaymentIn2008()
-        // {
-        //     // return await _context.Customers.Where(x => x.Payments.Any(y => y.PaymentDate.Year == 2008)).ToListAsync();
-        // }
+
+        public async Task<IEnumerable<Customer>> GetCustomersWithPaymentsInYear(int year)
+        {
+            var customerIds = await _context.Payments
+                .Where(payment => payment.PaymentDate.Year == year && payment.PaymentDate.Month == 1 && payment.PaymentDate.Day == 1) // Filtrar solo por la fecha sin tener en cuenta la hora
+                .Select(payment => payment.Order.OrderCustomerEmployees.First().IdCustomer)
+                .Distinct()
+                .ToListAsync();
+
+            var customers = await _context.Customers
+                .Where(customer => customerIds.Contains(customer.Id))
+                .ToListAsync();
+
+            return customers;
+        }
+
+
     }
 }

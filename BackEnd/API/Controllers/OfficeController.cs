@@ -17,7 +17,7 @@ public class OfficeController : BaseController
     private readonly IMapper _mapper;
     private readonly GardenContext _context;
 
-    public OfficeController(IUnitOfWork unitOfWork, IMapper mapper,GardenContext context)
+    public OfficeController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -38,7 +38,7 @@ public class OfficeController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> GetOfficeCity()
     {
-        
+
         var result = await _context.Offices.Include(o => o.Address)
         .Where(o => o.Address != null && o.Address.Cities != null)
         .Select(office => new
@@ -49,6 +49,42 @@ public class OfficeController : BaseController
         .ToListAsync();
         return Ok(result);
     }
+
+    [HttpGet("OfficesWithoutSalesRepresentativesForFruitProducts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IEnumerable<Office>>> GetOfficesWithoutSalesRepresentativesForFruitProducts()
+    {
+        try
+        {
+            var officesWithoutSalesRepresentatives = await _context.Offices
+                .Where(office =>
+                    !office.OfficeEmployees.Any(oe =>
+                        oe.Employee.EmployeePosition == "Sales Representative" &&
+                        oe.Employee.OrderCustomerEmployees.Any(oce =>
+                            oce.Order.OrderDetails.Any(od =>
+                                od.Product.Gamma.TextDescription == "Frutales"
+                            )
+                        )
+                    )
+                )
+                .ToListAsync();
+
+            if (officesWithoutSalesRepresentatives.Any())
+            {
+                return Ok(officesWithoutSalesRepresentatives);
+            }
+            else
+            {
+                return BadRequest("No se encontraron oficinas sin representantes de ventas para productos de la gama Frutales.");
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno del servidor: {ex.Message}");
+        }
+    }
+
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
