@@ -1,8 +1,8 @@
 # ProyectoJardineria
 ## Integrantes
--Santiago González Agudelo 
--Andres Sebastian Arciniegas
--Santiago De La Cruz Lopez
+- Santiago González Agudelo 
+- Andres Sebastian Arciniegas
+- Santiago De La Cruz Lopez
 
 ## INSERTS
 
