@@ -181,12 +181,18 @@ namespace API.Controllers
         [HttpGet("CustomersWithoutPayments")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersWithoutPayments()
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersWithoutPayments()
         {
             try
             {
                 var customersWithoutPayments = await _context.Customers
                     .Where(customer => !customer.OrderCustomerEmployees.Any(oce => oce.Order.Payment != null))
+                    .Select(customer => new CustomerDto
+                    {
+                        Id = customer.Id,
+                        CustomerName = customer.CustomerName,
+                        CustomerLastName = customer.CustomerLastName
+                    })
                     .ToListAsync();
 
                 if (customersWithoutPayments.Any())

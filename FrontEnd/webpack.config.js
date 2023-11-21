@@ -47,7 +47,7 @@ module.exports = {
     chart: "./src/js/index.js",
     settings: "./src/js/index.js",
     profile: "./src/js/index.js",
-    tables: "./src/js/index.js",
+    tables: "./src/js/tables.js",
     "calendar": "./src/js/index.js",
     "form-elements": "./src/js/index.js",
     "form-layout": "./src/js/index.js",
