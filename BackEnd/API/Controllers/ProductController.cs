@@ -8,6 +8,8 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 
 namespace API.Controllers
 {
@@ -15,11 +17,13 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -75,12 +79,12 @@ namespace API.Controllers
                 ProductDto.Id = id;
             }
 
-            if(ProductDto.Id != id)
+            if (ProductDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(ProductDto == null)
+            if (ProductDto == null)
             {
                 return NotFound();
             }
@@ -106,6 +110,21 @@ namespace API.Controllers
             _unitOfWork.Products.Remove(nombreVariable);
             await _unitOfWork.SaveAsync();
             return NoContent();
+        }
+
+        [HttpGet("GetProductByGamma&Stock/{idgamma}/{instock}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetDeliveryByMonth(string idgamma, int stock)
+        {
+            var result = await _context.Products
+                                .Where(p => p.Gamma != null && p.Gamma.Id== idgamma && p.InStockQuantity > stock)
+                                .OrderByDescending(p => p.ProductSalesPrice).ToListAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<List<ProductDto>>(result);
         }
     }
 }

@@ -116,7 +116,6 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<SelectOrderWithCustomerDto>>> GetDeliveryOffTime()
         {
-            var today = DateTime.Today;
             var overdueOrders = _context.Orders
                 .Where(o => o.DeliveryDate > o.ExpectedDate &&
                             o.OrderCustomerEmployees.Any())
@@ -130,6 +129,18 @@ namespace API.Controllers
                 .ToListAsync();
 
             return await overdueOrders;
+        }
+
+        [HttpGet("GetDeliveryByMonth/{month}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetDeliveryByMonth(int month)
+        {
+            var result = await _context.Orders.Where(e => e.DeliveryDate.Month == month).ToListAsync();
+            if (result == null){
+                return NotFound();
+            }
+            return _mapper.Map<List<OrderDto>>(result);
         }
     }
 }
