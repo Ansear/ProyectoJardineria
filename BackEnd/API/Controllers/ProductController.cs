@@ -8,6 +8,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Data;
 
 namespace API.Controllers
 {
@@ -15,11 +16,13 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -75,12 +78,12 @@ namespace API.Controllers
                 ProductDto.Id = id;
             }
 
-            if(ProductDto.Id != id)
+            if (ProductDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(ProductDto == null)
+            if (ProductDto == null)
             {
                 return NotFound();
             }
@@ -106,6 +109,57 @@ namespace API.Controllers
             _unitOfWork.Products.Remove(nombreVariable);
             await _unitOfWork.SaveAsync();
             return NoContent();
+        }
+
+        [HttpGet("MinMaxProductSalesPrice")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetMinMaxProductSalesPrice()
+        {
+            var minMaxPrices = _context.Products
+            .OrderByDescending(p => p.ProductSalesPrice)
+            .Select(p => new
+            {
+                ProductName = p.ProductName,
+                ProductSalesPrice = p.ProductSalesPrice
+            })
+            .Take(2)
+            .ToList();
+
+            if (minMaxPrices == null || !minMaxPrices.Any())
+            {
+                return NotFound("No products found.");
+            }
+
+            return Ok(minMaxPrices);
+        }
+
+        [HttpGet("LeastStock")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<ProductDto> GetLeastStock()
+        {
+            var productWithLeastStock = _context.Products
+                .OrderBy(product => product.InStockQuantity)
+                .FirstOrDefault();
+
+            if (productWithLeastStock == null)
+            {
+                return NotFound("No products found.");
+            }
+
+            var productDto = new 
+            {
+                ProductName = productWithLeastStock.ProductName,
+                ProductDimensions = productWithLeastStock.ProductDimensions,
+                ProductDescription = productWithLeastStock.ProductDescription,
+                ProductSalesPrice = productWithLeastStock.ProductSalesPrice,
+                InStockQuantity = productWithLeastStock.InStockQuantity,
+                SupplierPrice = productWithLeastStock.SupplierPrice,
+                IdGamma = productWithLeastStock.IdGamma
+            };
+
+            return Ok(productDto);
         }
     }
 }

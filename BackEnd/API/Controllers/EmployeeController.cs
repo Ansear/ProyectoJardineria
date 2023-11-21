@@ -125,7 +125,7 @@ namespace API.Controllers
         public async Task<ActionResult> GetCeo()
         {
             var ceo = await _context.Employees
-                .Where(e => e.Id == e.IdBoss) 
+                .Where(e => e.Id == e.IdBoss)
                 .Select(e => new
                 {
                     Position = e.EmployeePosition,
@@ -142,5 +142,76 @@ namespace API.Controllers
 
             return Ok(ceo);
         }
+
+        [HttpGet("AlbertoSoria")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetAlbertoSoria()
+        {
+            var albertoSoriaId = _context.Employees
+            .Where(employee => employee.EmployeeName == "Alberto".ToLower() && employee.EmployeeLastName == "Soria".ToLower())
+            .Select(employee => employee.Id)
+            .FirstOrDefault();
+            if (albertoSoriaId == "0" || albertoSoriaId == null)
+            {
+                return NotFound($"Alberto Soria not found.");
+            }
+
+            var employeesUnderAlbertoSoria = _context.Employees
+                       .Where(employee => employee.IdBoss == albertoSoriaId)
+                       .Select(employee => new
+                       {
+                           EmployeeId = employee.Id,
+                           EmployeeName = employee.EmployeeName,
+                           EmployeeLastName = employee.EmployeeLastName,
+                           EmployeeEmail = employee.EmployeeEmail,
+                           EmployeePosition = employee.EmployeePosition
+                       })
+                       .ToList();
+
+            if (employeesUnderAlbertoSoria == null || !employeesUnderAlbertoSoria.Any())
+            {
+                return NotFound("No employees found under Alberto Soria.");
+            }
+
+            return Ok(employeesUnderAlbertoSoria);
+        }
+
+        [HttpGet("NonSalesRepresentatives")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetNonSalesRepresentatives()
+        {
+            var nonSalesRepresentatives = await _context.Employees
+            .Where(employee => !_context.OrderCustomerEmployees
+                .Any(oce => oce.IdEmployee == employee.Id))
+            .Join(_context.OfficeEmployees,
+                employee => employee.Id,
+                officeEmployee => officeEmployee.IdEmployee,
+                (employee, officeEmployee) => new
+                {
+                    Name = employee.EmployeeName,
+                    LastName = employee.EmployeeLastName,
+                    Position = employee.EmployeePosition,
+                    PhoneNumberOffice = _context.Phones
+            .Join(
+                _context.Offices,
+                phone => phone.Id,
+                office => office.IdPhone,
+                (phone, office) => new { Phone = phone, Office = office }
+                )
+                .Where(joinResult => joinResult.Office.Id == officeEmployee.IdOffice)
+                .Select(joinResult => joinResult.Phone.PhoneNumber)
+                .FirstOrDefault()
+        })
+            .ToListAsync();
+
+            if (nonSalesRepresentatives == null || !nonSalesRepresentatives.Any())
+            {
+                return NotFound("No non-sales representatives found.");
+    }
+
+            return Ok(nonSalesRepresentatives);
+}
     }
 }

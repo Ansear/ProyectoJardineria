@@ -7,17 +7,20 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Data;
 
 namespace API.Controllers;
 public class CityController : BaseController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly GardenContext _context;
 
-    public CityController(IUnitOfWork unitOfWork, IMapper mapper)
+    public CityController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _context = context;
     }
 
     [HttpGet]
@@ -85,5 +88,43 @@ public class CityController : BaseController
         _unitOfWork.Cities.Remove(result);
         await _unitOfWork.SaveAsync();
         return NoContent();
+    }
+
+    [HttpGet("CustomerCountByCityStartingWithM")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult GetCustomerCountByCityStartingWithM()
+    {
+        var customerCountByCity = _context.Cities
+            .Where(c => c.Name.StartsWith("M"))
+            .GroupJoin(
+                _context.Address,
+                city => city.Id,
+                address => address.IdCity,
+                (city, addresses) => new { City = city, Addresses = addresses }
+            )
+            .SelectMany(
+                x => x.Addresses.DefaultIfEmpty(),
+                (cityGroup, address) => new { City = cityGroup.City, Address = address }
+            )
+            .GroupJoin(
+                _context.Customers,
+                x => x.Address.Id,
+                customer => customer.AddressId,
+                (x, customers) => new { City = x.City, Customers = customers }
+            )
+            .Select(x => new 
+            {
+                CityName = x.City.Name,
+                CustomerCount = x.Customers.Count()
+            })
+            .ToList();
+
+        if (customerCountByCity == null || !customerCountByCity.Any())
+        {
+            return NotFound("No customer counts by city starting with 'M' found.");
+        }
+
+        return Ok(customerCountByCity);
     }
 }

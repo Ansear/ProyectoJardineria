@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 namespace API.Controllers
@@ -124,7 +125,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<IEnumerable<CustomerDto>> GetCustomersInMadridWithSalesRepresentatives()
         {
-            
+
             var customers = _context.Customers
                 .Join(
                     _context.Address,
@@ -145,7 +146,7 @@ namespace API.Controllers
                     combined => combined.CustomerCity.City.Name == "Madrid" &&
                                 (combined.OrderCustomerEmployee.IdEmployee == "11" || combined.OrderCustomerEmployee.IdEmployee == "30"))
                 .Select(
-                    combined => new 
+                    combined => new
                     {
                         Id = combined.CustomerCity.CustomerAddress.Customer.Id,
                         CustomerName = combined.CustomerCity.CustomerAddress.Customer.CustomerName,
@@ -165,6 +166,152 @@ namespace API.Controllers
             }
 
             return Ok(customers);
+        }
+
+        [HttpGet("CustomerCountByCountry")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetCustomerCountByCountry()
+        {
+            var customerCountByCountry = _context.Cities
+                .GroupJoin(
+                    _context.Address,
+                    city => city.Id,
+                    address => address.IdCity,
+                    (city, addresses) => new { City = city, Addresses = addresses }
+                )
+                .SelectMany(
+                    x => x.Addresses.DefaultIfEmpty(),
+                    (cityGroup, address) => new { City = cityGroup.City, Address = address }
+                )
+                .GroupJoin(
+                    _context.Customers,
+                    x => x.Address.Id,
+                    customer => customer.AddressId,
+                    (x, customers) => new { City = x.City, Customers = customers }
+                )
+                .Select(x => new
+                {
+                    CountryName = x.City.Name,
+                    CustomerCount = x.Customers.Count()
+                })
+                .ToList();
+
+            if (customerCountByCountry == null || !customerCountByCountry.Any())
+            {
+                return NotFound("No customer counts by country found.");
+            }
+
+            return Ok(customerCountByCountry);
+        }
+
+        [HttpGet("CustomerWithHighestCreditLimit")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<string> GetCustomerWithHighestCreditLimit()
+        {
+            var CreditLimit = _context.Customers
+                .OrderByDescending(c => c.CreditLimit)
+                .FirstOrDefault();
+
+            if (CreditLimit == null)
+            {
+                return NotFound("No customers found.");
+            }
+
+            return Ok($"Customer:Name= {CreditLimit.CustomerName}, LastName= {CreditLimit.CustomerLastName}");
+        }
+
+        [HttpGet("WithoutPayments")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult WithoutPayments()
+        {
+            var customersWithoutPayments = _context.Customers
+                .Where(customer => !_context.OrderCustomerEmployees
+                    .Any(oce => oce.IdCustomer == customer.Id && oce.Order != null && oce.Order.Payment != null))
+                .Select(customer => new
+                {
+                    Id = customer.Id,
+                    CustomerName = customer.CustomerName,
+                    CustomerLastName = customer.CustomerLastName,
+                    CustomerPhoneId = customer.CustomerPhoneId,
+                    CustomerFax = customer.CustomerFax,
+                    AddressId = customer.AddressId,
+                    CreditLimit = customer.CreditLimit,
+                    TypePersonId = customer.TypePersonId,
+                    IdUser = customer.IdUser
+                })
+                .ToList();
+
+            if (customersWithoutPayments == null || !customersWithoutPayments.Any())
+            {
+                return NotFound("No customers found without payments.");
+            }
+
+            return Ok(customersWithoutPayments);
+        }
+
+        [HttpGet("WithPayments")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> WithPayments()
+        {
+            var customersWithPayments = await _context.Customers
+            .Where(customer => _context.OrderCustomerEmployees
+                .Any(oce => oce.IdCustomer == customer.Id && oce.Order.Payment != null))
+            .Select(customer => new
+            {
+                Id = customer.Id,
+                CustomerName = customer.CustomerName,
+                CustomerLastName = customer.CustomerLastName,
+                CustomerPhoneId = customer.CustomerPhoneId,
+                CustomerFax = customer.CustomerFax,
+                AddressId = customer.AddressId,
+                CreditLimit = customer.CreditLimit,
+                TypePersonId = customer.TypePersonId,
+                IdUser = customer.IdUser
+            })
+            .ToListAsync();
+
+            if (customersWithPayments == null || !customersWithPayments.Any())
+            {
+                return NotFound("No customers found with payments.");
+            }
+
+            return Ok(customersWithPayments);
+        }
+
+        [HttpGet("OrdersIn2008")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCustomersWithOrdersIn2008()
+        {
+            var customersWithOrdersIn2008 = await _context.Customers
+                .Where(customer => _context.OrderCustomerEmployees
+                    .Any(oce => oce.IdCustomer == customer.Id &&
+                                oce.Order.OrderDate.Year == 2008))
+                .OrderBy(customer => customer.CustomerName)
+                .Select(customer => new
+                {
+                    Id = customer.Id,
+                    CustomerName = customer.CustomerName,
+                    CustomerLastName = customer.CustomerLastName,
+                    CustomerPhoneId = customer.CustomerPhoneId,
+                    CustomerFax = customer.CustomerFax,
+                    AddressId = customer.AddressId,
+                    CreditLimit = customer.CreditLimit,
+                    TypePersonId = customer.TypePersonId,
+                    IdUser = customer.IdUser
+                })
+                .ToListAsync();
+
+            if (customersWithOrdersIn2008 == null || !customersWithOrdersIn2008.Any())
+            {
+                return NotFound("No customers found with orders in 2008.");
+            }
+
+            return Ok(customersWithOrdersIn2008);
         }
     }
 }

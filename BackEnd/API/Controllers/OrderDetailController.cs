@@ -8,18 +8,21 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Data;
 
-namespace API.Controllers 
+namespace API.Controllers
 {
     public class OrderDetailController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GardenContext _context;
 
-        public OrderDetailController(IUnitOfWork unitOfWork, IMapper mapper)
+        public OrderDetailController(IUnitOfWork unitOfWork, IMapper mapper, GardenContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -75,12 +78,12 @@ namespace API.Controllers
                 OrderDetailDto.Id = id;
             }
 
-            if(OrderDetailDto.Id != id)
+            if (OrderDetailDto.Id != id)
             {
                 return BadRequest();
             }
 
-            if(OrderDetailDto == null)
+            if (OrderDetailDto == null)
             {
                 return NotFound();
             }
@@ -106,6 +109,31 @@ namespace API.Controllers
             _unitOfWork.OrderDetails.Remove(nombreVariable);
             await _unitOfWork.SaveAsync();
             return NoContent();
+        }
+
+        [HttpGet("Top20BestSellingProducts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetTop20BestSellingProducts()
+        {
+            var top20BestSellingProducts = _context.OrderDetails
+                .GroupBy(od => od.ProductCode)
+                .Select(group => new 
+                {
+                    ProductCode = group.Key,
+                    ProductName = group.First().Product.ProductName,
+                    TotalUnitsSold = group.Sum(od => od.Quantity)
+                })
+                .OrderByDescending(x => x.TotalUnitsSold)
+                .Take(20)
+                .ToList();
+
+            if (top20BestSellingProducts == null || !top20BestSellingProducts.Any())
+            {
+                return NotFound("No best-selling products found.");
+            }
+
+            return Ok(top20BestSellingProducts);
         }
     }
 }
