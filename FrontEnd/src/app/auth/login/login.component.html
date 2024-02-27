@@ -1,0 +1,29 @@
+<main class="flex min-h-[100dvh] items-center p-32">
+  <form class="flex flex-col p-12">
+    <h1 class="text-[#4FD1C5] pb-3 font-bold text-4xl">Bienvenido de Vuelta</h1>
+    <p class="text-[#A0AEC0] pb-9 text-sm font-bold">Ingresa tu correo y contraseña para iniciar sesión</p>
+    <div class="flex flex-col">
+      <label class="mb-3" for="">Correo Electrónico</label>
+      <input
+        class="mb-9 px-4 border h-12 rounded-2xl outline-none focus:border-[#3182ce] hover:border-[#CBD5E0] shadow-[0px_0px_0px_1px_rgb(49,130,206)]"
+        type="email" name="" id="" placeholder="Tu correo electrónico">
+      <label class="mb-3" for="">Contraseña</label>
+      <input
+        class="mb-9 px-4 border h-12 rounded-2xl outline-none focus:border-[#3182ce] hover:border-[#CBD5E0] shadow-[0px_0px_0px_1px_rgb(49,130,206)]"
+        type="password" name="" id="" placeholder="Tu contraseña">
+      <label class="relative inline-flex cursor-pointer items-center">
+        <input id="switch" type="checkbox" class="peer sr-only" />
+        <label for="switch" class="hidden"></label>
+        <div
+          class="peer h-6 w-11 rounded-full border bg-slate-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[#319795] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-green-300">
+        </div>
+        <p class="ml-3 text-base">Recúerdame</p>
+      </label>
+      <button class="my-5 h-11 bg-[#4FD1C5] text-white rounded-2xl text-[10px] font-semibold" type="submit">INICIAR
+        SESIÓN</button>
+    </div>
+  </form>
+  <div class="absolute right-0 top-0 w-[50vw] h-[80%] rounded-bl-2xl">
+    <img src="../../../assets/garden-login.svg" class="rounded-bl-2xl w-full h-fit" alt="" srcset="">
+  </div>
+</main>
