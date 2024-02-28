@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+import { ProfileComponent } from './home/components/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -9,5 +10,9 @@ export const routes: Routes = [
   {
     path: 'sidebar',
     component: SidebarComponent
+  },
+  {
+    path:"profile",
+    component:ProfileComponent
   }
 ];
